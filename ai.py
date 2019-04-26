@@ -1,6 +1,7 @@
 import constants
 import random
 
+MISS_GAP = 2
 
 class AI:
     def __init__(self, ball, bat):
@@ -17,8 +18,9 @@ class AI:
     @property
     def target(self):
         if self.ball.vector[1] != self.bat.side:
-            unbounded_y = self.ball.pos[0] + abs((self.bat.col + self.bat.side) - self.ball.pos[1]) * self.ball.vector[0]
-            unbounded_y += random.randrange(-5, 3)
-            return ((unbounded_y % constants.SCR_HEIGHT) * (-1)**(unbounded_y // constants.SCR_HEIGHT)) % constants.SCR_HEIGHT
+            unbounded_y = (self.ball.pos[0] - 1) + abs((self.bat.col + self.bat.side) - self.ball.pos[1]) * self.ball.vector[0]
+            target = (((unbounded_y % (constants.SCR_HEIGHT - 1)) * (-1)**(unbounded_y // (constants.SCR_HEIGHT - 1))) % (constants.SCR_HEIGHT - 1)) + 1
+            target += random.randrange(-(self.bat.length + MISS_GAP), 2 + MISS_GAP)
+            return target
         else:
             return self.bat.y

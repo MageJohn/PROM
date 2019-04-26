@@ -21,5 +21,5 @@ class Net:
                 pen_down = not pen_down
             if pen_down:
                 self.cg.write(self.cg.BG + "\x1B[D")
-                self.cg.bg[(1 + i, mid)] = constants.NET_COL
+                self.cg.bg[(1 + i, mid)] = self.color
             self.cg.write("\x1B[B")
