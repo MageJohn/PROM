@@ -1,12 +1,15 @@
 import sys
 from graphics_shim import ConsoleGraphics as cg
+#from serial_wrapper import TextSerial
 
 # Screen sizes
 SCR_WIDTH = 80
 SCR_HEIGHT = 24
+SCR_MIN = 1
 
 # A file-like object for output
 OUTPUT = sys.stdout
+#OUTPUT = TextSerial("/dev/ttyAMA0", 115200)
 
 # Speeds the ball can go at
 # Expressed as time per refresh
@@ -20,9 +23,13 @@ BALL_SPEED_WEIGHTS = [2.5, 7.5, 10]
 # Expressed as time per refresh
 BAT_SPEED = 1/60
 
+INPUT_AD799_MAX = 4092
+INPUT_AD799_MIN = 0
 
 # Speed at which the AI responds
 AI_SPEED = 5/SCR_HEIGHT
+AI_P1 = True
+AI_P2 = True
 
 # Whether or not to flush the output. May not be necessary over serial
 FLUSHING = True

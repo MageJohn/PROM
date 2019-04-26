@@ -9,22 +9,30 @@ from bat import Bat
 from ball import Ball
 from ai import AI
 
+import input_interface
+
 
 def main():
     """Main function of the game. Contains the game loop and logic"""
     cg = ConsoleGraphics(output=constants.OUTPUT)
 
+    net = Net(cg, constants.NET_COL)
+    p1_score = Score(cg, Score.LEFT, constants.SCOR_COL)
+    p2_score = Score(cg, Score.RIGHT, constants.SCOR_COL)
+    p1_bat = Bat(cg, Bat.LEFT, constants.BAT_COL)
+    p2_bat = Bat(cg, Bat.RIGHT, constants.BAT_COL)
+    ball = Ball(cg, p1_bat, constants.BALL_COL)
+
+    p1_interface = input_interface.AD799()
+
+    ai1 = AI(ball, p1_bat)
+    ai2 = AI(ball, p2_bat)
+
+    serves = 5
+    serve = False
+    ball.serving = True
+
     with cg:
-        net = Net(cg, constants.NET_COL)
-        p1_score = Score(cg, Score.LEFT, constants.SCOR_COL)
-        p2_score = Score(cg, Score.RIGHT, constants.SCOR_COL)
-        p1_bat = Bat(cg, Bat.LEFT, constants.BAT_COL)
-        p2_bat = Bat(cg, Bat.RIGHT, constants.BAT_COL)
-        ball = Ball(cg, p1_bat, constants.BALL_COL)
-
-        ai1 = AI(ball, p1_bat)
-        ai2 = AI(ball, p2_bat)
-
         net.draw()
         p1_score.draw()
         p2_score.draw()
@@ -32,10 +40,6 @@ def main():
         p2_bat.draw()
 
         # Code goes here for intro music
-
-        serves = 5
-        serve = False
-        ball.serving = True
 
         # Independant refresh times mean the ball can change speeds without
         # affecting the bats.
@@ -55,6 +59,7 @@ def main():
                         p1_score.draw()
 
                     ball.serving = True
+                    ball.speed = constants.BAT_SPEED
                     serves -= 1
                     if not serves:
                         ball.server = p2_bat if ball.server is p1_bat else p1_bat
@@ -66,7 +71,7 @@ def main():
                     # Code goes here for score events; e.g. PiGlow lights,
                     # sound effects
 
-                elif not serve:
+                elif not serve and not ball.serving:
                     bat_collide = p1_bat.collide(ball) or\
                                   p2_bat.collide(ball)
                     wall_collide = ball.collide()
@@ -77,7 +82,7 @@ def main():
                         ball.vector = wall_collide
 
                         # Code goes here for bounce events; e.g. sound effects
-                else:
+                elif serve:
                     serve = False
                     ball.serving = False
                     ball.vector = [random.choice([-1, 0, 1]), ball.server.side]
@@ -93,22 +98,28 @@ def main():
             if time.clock() - bat_refresh_time >= constants.BAT_SPEED:
                 # Move bats to position here
 
+                if not constants.AI_P1:
+                    p1_input = p1_interface.get_input()
+                    p1_bat.move(p1_input[0])
+                    if ball.server is p1_bat and p1_input[1] and ball.serving:
+                        serve = True
+
                 p1_bat.draw()
                 p2_bat.draw()
 
                 bat_refresh_time = time.clock()
 
             if time.clock() - ai_refresh_time >= constants.AI_SPEED:
-                ai1_input = ai1.get_input()
-                ai2_input = ai2.get_input()
-
-                p1_bat.move(ai1_input[0])
-                p2_bat.move(ai2_input[0])
-
-                if ball.server is p1_bat and ai1_input[1]:
-                    serve = True
-                elif ball.server is p2_bat and ai2_input[1]:
-                    serve = True
+                if constants.AI_P1:
+                    ai1_input = ai1.get_input()
+                    p1_bat.move(ai1_input[0])
+                    if ball.server is p1_bat and ai1_input[1]:
+                        serve = True
+                if constants.AI_P2:
+                    ai2_input = ai2.get_input()
+                    p2_bat.move(ai2_input[0])
+                    if ball.server is p2_bat and ai2_input[1]:
+                        serve = True
 
                 ai_refresh_time = time.clock()
 

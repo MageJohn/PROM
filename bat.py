@@ -17,7 +17,7 @@ class Bat:
         self.length = self.LENGTH
 
     def move(self, y):
-        if y in range(1, constants.SCR_HEIGHT - self.length + 1):
+        if y in range(1, constants.SCR_HEIGHT - self.length + 2):
             self.old_y = self.y
             self.y = y
 
