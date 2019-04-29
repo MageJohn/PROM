@@ -39,13 +39,13 @@ def main():
 
         # Independant refresh times mean the ball can change speeds without
         # affecting the bats.
-        ball_refresh_time = time.clock()
-        bat_refresh_time = time.clock()
-        ai_refresh_time = time.clock()
+        ball_refresh_time = time.perf_counter()
+        bat_refresh_time = time.perf_counter()
+        ai_refresh_time = time.perf_counter()
 
         playing = True
         while playing:
-            if time.clock() - ball_refresh_time >= ball.speed:
+            if time.perf_counter() - ball_refresh_time >= ball.speed:
                 if ball.pos[1] == 0 or ball.pos[1] == constants.SCR_WIDTH:
                     if ball.pos[1] == 0:
                         p2_score.score += 1
@@ -88,17 +88,17 @@ def main():
 
                 ball.draw()
 
-                ball_refresh_time = time.clock()
+                ball_refresh_time = time.perf_counter()
 
-            if time.clock() - bat_refresh_time >= constants.BAT_SPEED:
+            if time.perf_counter() - bat_refresh_time >= constants.BAT_SPEED:
                 # Move bats to position here
 
                 p1_bat.draw()
                 p2_bat.draw()
 
-                bat_refresh_time = time.clock()
+                bat_refresh_time = time.perf_counter()
 
-            if time.clock() - ai_refresh_time >= constants.AI_SPEED:
+            if time.perf_counter() - ai_refresh_time >= constants.AI_SPEED:
                 ai1_input = ai1.get_input()
                 ai2_input = ai2.get_input()
 
@@ -110,7 +110,7 @@ def main():
                 elif ball.server is p2_bat and ai2_input[1]:
                     serve = True
 
-                ai_refresh_time = time.clock()
+                ai_refresh_time = time.perf_counter()
 
             # Possible place for code which deals with smoothing
 

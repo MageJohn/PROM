@@ -73,7 +73,6 @@ def test_score():
     writes = []
     score1 = score.Score(cg, score.Score.LEFT, constants.SCOR_COL)
     score2 = score.Score(cg, score.Score.RIGHT, constants.SCOR_COL)
-    n = net.Net(cg, constants.NET_COL)
     score2.score = 9
     with cg:
         writes.append(out.total_written - sum(writes))
@@ -82,7 +81,6 @@ def test_score():
             writes.append(out.total_written - sum(writes))
             score2.draw()
             writes.append(out.total_written - sum(writes))
-            n.draw()
             score1.score += 1
             score2.score -= 1
             cg.out.flush()
@@ -177,3 +175,35 @@ def test_ball_collide():
                 cg.out.flush()
                 time.sleep(0.2)
             time.sleep(0.5)
+
+
+def test_bg_memory():
+    # Tests whether the dictionary used to keep track of what's in the
+    # background (for updating the ball) is correct
+    cg = ConsoleGraphics()
+    s1 = score.Score(cg, score.Score.LEFT, constants.SCOR_COL)
+    s2 = score.Score(cg, score.Score.RIGHT, constants.SCOR_COL)
+    n = net.Net(cg, constants.NET_COL)
+
+    with cg:
+        n.draw()
+        s1.draw()
+        s2.draw()
+        for i in range(10):
+            cg.out.flush()
+            time.sleep(0.5)
+            cg.write("\x1B[49m\x1B[2J")  # Clear the screen
+            for k in cg.bg:
+                # Move to position
+                cg.write("\x1B[{};{}H".format(k[0], k[1]))
+                # Set background color from the dictionary
+                cg.write("\x1B[{}m".format(cg.bg[k]))
+                cg.write(' ')
+            cg.out.flush()
+            time.sleep(0.5)
+            if i % 2 == 0:
+                s1.score += 1
+                s1.draw()
+            else:
+                s2.score += 1
+                s2.draw()
