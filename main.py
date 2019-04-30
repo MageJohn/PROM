@@ -15,6 +15,7 @@ def main():
     cg = ConsoleGraphics(output=constants.OUTPUT)
 
     with cg:
+        # Create game objects
         net = Net(cg, constants.NET_COL)
         p1_score = Score(cg, Score.LEFT, constants.SCOR_COL)
         p2_score = Score(cg, Score.RIGHT, constants.SCOR_COL)
@@ -57,7 +58,9 @@ def main():
                     ball.serving = True
                     serves -= 1
                     if not serves:
-                        ball.server = p2_bat if ball.server is p1_bat else p1_bat
+                        ball.server = p2_bat \
+                                        if ball.server is p1_bat else \
+                                        p1_bat
                         serves = 5
 
                     if p1_score.score == 9 or p2_score.score == 9:
