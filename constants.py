@@ -11,6 +11,7 @@ SCR_MIN = 1
 # A file-like object for output
 if LOCAL:
     OUTPUT = sys.stdout
+    DEBUG = True
 
     # Whether or not to flush the output. May not be necessary over serial
     FLUSHING = True
