@@ -9,7 +9,8 @@ from bat import Bat
 from ball import Ball
 from ai import AI
 
-import input_interface
+if not (constants.AI_P1 and constants.AI_P2):
+    import input_interface
 
 
 def main():
@@ -23,7 +24,8 @@ def main():
     p2_bat = Bat(cg, Bat.RIGHT, constants.BAT_COL)
     ball = Ball(cg, p1_bat, constants.BALL_COL)
 
-    p1_interface = input_interface.AD799()
+    if not (constants.AI_P1 and constants.AI_P2):
+        p1_interface = input_interface.AD799()
 
     ai1 = AI(ball, p1_bat)
     ai2 = AI(ball, p2_bat)
@@ -43,13 +45,13 @@ def main():
 
         # Independant refresh times mean the ball can change speeds without
         # affecting the bats.
-        ball_refresh_time = time.clock()
-        bat_refresh_time = time.clock()
-        ai_refresh_time = time.clock()
+        ball_refresh_time = time.perf_counter()
+        bat_refresh_time = time.perf_counter()
+        ai_refresh_time = time.perf_counter()
 
         playing = True
         while playing:
-            if time.clock() - ball_refresh_time >= ball.speed:
+            if time.perf_counter() - ball_refresh_time >= ball.speed:
                 if ball.pos[1] == 0 or ball.pos[1] == constants.SCR_WIDTH:
                     if ball.pos[1] == 0:
                         p2_score.score += 1
@@ -62,7 +64,9 @@ def main():
                     ball.speed = constants.BAT_SPEED
                     serves -= 1
                     if not serves:
-                        ball.server = p2_bat if ball.server is p1_bat else p1_bat
+                        ball.server = p2_bat \
+                                        if ball.server is p1_bat else \
+                                        p1_bat
                         serves = 5
 
                     if p1_score.score == 9 or p2_score.score == 9:
@@ -93,9 +97,9 @@ def main():
 
                 ball.draw()
 
-                ball_refresh_time = time.clock()
+                ball_refresh_time = time.perf_counter()
 
-            if time.clock() - bat_refresh_time >= constants.BAT_SPEED:
+            if time.perf_counter() - bat_refresh_time >= constants.BAT_SPEED:
                 # Move bats to position here
 
                 if not constants.AI_P1:
@@ -107,9 +111,9 @@ def main():
                 p1_bat.draw()
                 p2_bat.draw()
 
-                bat_refresh_time = time.clock()
+                bat_refresh_time = time.perf_counter()
 
-            if time.clock() - ai_refresh_time >= constants.AI_SPEED:
+            if time.perf_counter() - ai_refresh_time >= constants.AI_SPEED:
                 if constants.AI_P1:
                     ai1_input = ai1.get_input()
                     p1_bat.move(ai1_input[0])
@@ -121,7 +125,7 @@ def main():
                     if ball.server is p2_bat and ai2_input[1]:
                         serve = True
 
-                ai_refresh_time = time.clock()
+                ai_refresh_time = time.perf_counter()
 
             # Possible place for code which deals with smoothing
 
