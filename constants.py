@@ -11,14 +11,14 @@ SCR_MIN = 1
 # A file-like object for output
 if LOCAL:
     OUTPUT = sys.stdout
-    DEBUG = True
+    DEBUG = False
 
     # Whether or not to flush the output. May not be necessary over serial
     FLUSHING = True
 else:
     from serial_wrapper import TextSerial
     OUTPUT = TextSerial("/dev/ttyAMA0", 115200)
-
+    DEBUG = True
     FLUSHING = False
 
 # Speed at which the AI responds
