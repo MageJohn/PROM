@@ -17,15 +17,13 @@ from PyGlow import PyGlow
 
 
 b = input("Maximum brightness: ")
-s = input("Speed in milliseconds (try 1000 as a default): ")
+s = int(input("Speed in milliseconds (try 1000 as a default): "))
 
-pyglow = PyGlow(brightness=int(b), speed=int(s), pulse=True)
+pyglow = PyGlow(brightness=int(b), speed=s, pulse=True)
 
 pyglow.all(0)
 
-for (colour in ['white','blue','green','yellow','orange','red']):
-    pyglow.color(colour,255)
-    time.sleep(s)
-    pyglow.color(colour,0)
-
-
+for colour in ['white', 'blue', 'green', 'yellow', 'orange', 'red']:
+    pyglow.color(colour, 255)
+    time.sleep(s / 1000)
+    pyglow.color(colour, 0)
