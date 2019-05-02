@@ -16,10 +16,10 @@ import time
 from PyGlow import PyGlow
 
 
-b = input("Maximum brightness: ")
+b = int(input("Maximum brightness: "))
 s = int(input("Speed in milliseconds (try 1000 as a default): "))
 
-pyglow = PyGlow(brightness=int(b), speed=s, pulse=True)
+pyglow = PyGlow(brightness=int(b), speed=s, pulse=False)
 
 pyglow.all(0)
 
