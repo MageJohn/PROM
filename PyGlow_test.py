@@ -42,7 +42,7 @@ for i in range(1,18):
     if(i<18):
         pyglow.led(i+1, int(b/2))
 
-    time.sleep(s/2000)
+    time.sleep(s/5000)
     
-    
+pyglow.all(0)
     
