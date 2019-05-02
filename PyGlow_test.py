@@ -12,7 +12,7 @@
 #
 #####
 
-
+import time
 from PyGlow import PyGlow
 
 
@@ -23,13 +23,9 @@ pyglow = PyGlow(brightness=int(b), speed=int(s), pulse=True)
 
 pyglow.all(0)
 
-print("Pulsing 1 Light")
-pyglow.led(1)
+for (colour in ['white','blue','green','yellow','orange','red']):
+    pyglow.color(colour,255)
+    time.sleep(s)
+    pyglow.color(colour,0)
 
-print("Pulsing Arms")
-pyglow.arm(1)
-pyglow.arm(2)
-pyglow.arm(3)
 
-print("Pulsing All")
-pyglow.all()
