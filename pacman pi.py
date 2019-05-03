@@ -50,7 +50,6 @@ def tone(pin, pitch, duration):
     # Delay used to discourage overlap of PWM cycles
     delay(2)
     
-def midi():
     tone(tonePin, 987, 129.292929293)
     tone(tonePin, 739, 129.292929293)
     tone(tonePin, 622, 129.292929293)
