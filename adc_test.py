@@ -5,10 +5,10 @@ import time
 
 PIN = 10
 I2C_ADDR = 0x38
-BITS = 8
+BITS = 6
 
 
-class adc():
+class ADC():
     def __init__(self, bus, pin, i2c_addr, bits):
         self.i2c_addr = i2c_addr
         self.bus = bus
@@ -44,8 +44,8 @@ class adc():
         for i in range(self.bits):
             new = count | 2**((self.bits - 1) - i)
             self._update(new)
-            time.sleep(0.1)
-            if self._get_comp():
+            time.sleep(0.001)
+            if not self._get_comp():
                 count = new
 
         return count
@@ -55,11 +55,11 @@ class adc():
 
 def main():
     bus = smbus.SMBus(1)
-    adc1 = adc(bus, PIN, I2C_ADDR, BITS)
+    adc = ADC(bus, PIN, I2C_ADDR, BITS)
 
     while True:
-        # value = adc1.ramp()
-        value = adc1.approx()
+        # value = adc.ramp()
+        value = adc.approx()
         print(value)
 
         time.sleep(0.1)
