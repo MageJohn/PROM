@@ -2,7 +2,7 @@ import sys
 import time
 
 from graphics_shim import ConsoleGraphics
-import constants
+from .. import constants
 import score
 import net
 import bat

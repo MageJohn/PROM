@@ -1,4 +1,4 @@
-import constants
+from .. import constants
 
 NUM_WIDTH = 3
 NUM_HEIGHT = 5
@@ -56,17 +56,16 @@ NUMS = ((1, 1, 1,
          0, 0, 1)
         )
 
+SIDES = {constants.LEFT: -(8 + 3), constants.RIGHT: 8}
+ROW = 2
+
 
 class Score:
-    LEFT = -(8 + 3)
-    RIGHT = 8
-
-    ROW = 2
 
     def __init__(self, cg, side, color):
         self.cg = cg
         mid = constants.SCR_WIDTH // 2
-        self.side = mid + side
+        self.side = mid + SIDES[side]
         self._score = 0
         self.color = color
 
@@ -86,11 +85,11 @@ class Score:
             self.cg.write("\x1B[{}m".format(color))
 
             # Move cursor to position
-            self.cg.write("\x1B[{0};{1}H".format(self.ROW, self.side))
+            self.cg.write("\x1B[{0};{1}H".format(ROW, self.side))
 
             for row in range(NUM_HEIGHT):
                 for col in range(NUM_WIDTH):
-                    cursor = self.ROW+row, self.side+col
+                    cursor = ROW+row, self.side+col
                     if NUMS[self.score][row*3 + col] != i:
                         self.cg.bg[cursor] = color
                         self.cg.write(self.cg.BG)

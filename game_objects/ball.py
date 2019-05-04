@@ -1,17 +1,17 @@
 import random
 
-import constants
+from .. import constants
 
 
 class Ball:
-    def __init__(self, cg, server, color):
+    def __init__(self, cg, color):
         self.pos = [10, 40]
         self.oldpos = tuple(self.pos)
         self.vector = [1, 1]
         self.serving = False
+        self.just_served = False
         self.randomise_speed()
 
-        self.server = server
         self.cg = cg
         self.color = color - 10
 
@@ -30,7 +30,6 @@ class Ball:
             if rand < w:
                 self.speed = constants.BALL_SPEEDS[i]
                 break
-
 
     def draw(self):
         # Set fg and bg colors. 8 bytes
