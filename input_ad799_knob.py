@@ -9,7 +9,7 @@ CH4 = 0x80
 
 class AD799:
     def __init__(self, addr, channel=CH1):
-        self.addr
+        self.addr = addr
         self.bus = smbus.SMBus(1)
         self.code = channel
 

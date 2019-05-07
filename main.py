@@ -8,6 +8,13 @@ from gameobj_ball import Ball
 from player import Player
 from sound_note import Note
 
+if not constants.P1_AI or not constants.P2_AI:
+    import input_ad799_knob
+    import input_diy_knob
+    import input_gpio_button
+    import input_i2c_button
+    import input_interface
+
 
 def main():
     """Main function of the game. Contains the game loop and logic"""
@@ -16,8 +23,24 @@ def main():
     net = Net(cg, constants.NET_COL)
     ball = Ball(cg, constants.BALL_COL)
 
-    p1 = Player(cg, ball, constants.LEFT, constants.P1_INTERFACE)
-    p2 = Player(cg, ball, constants.RIGHT, constants.P2_INTERFACE)
+    if not constants.P1_AI:
+        p1_knob = input_ad799_knob.AD799(constants.AD799_ADDR)
+        p1_serve = input_gpio_button.GPIO_Button(constants.PIN1, constants.BUTTONS_ACTIVE_LOW, debounce=True)
+        p1_superbat = input_gpio_button.GPIO_Button(constants.PIN2, constants.BUTTONS_ACTIVE_LOW, debounce=True)
+        p1_interface = input_interface.HardwareInputs(p1_knob, p1_serve, p1_superbat)
+    else:
+        p1_interface = AI()
+
+    if not constants.P2_AI:
+        p2_knob = input_diy_knob.DIY_ADC(constants.I2C_BUS, constants.PIN0, constants.DIY_ADC_ADDR, constants.DIY_ADC_N_BITS)
+        p2_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR, constants.I2C_BUTTON0_BIT, constants.BUTTONS_ACTIVE_LOW, debounce=False)
+        p2_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON1_ADDR, constants.I2C_BUTTON1_BIT, constants.BUTTONS_ACTIVE_LOW, debounce=False)
+        p2_interface = input_interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
+    else:
+        p2_interface = AI()
+
+    p1 = Player(cg, ball, constants.LEFT, p1_interface)
+    p2 = Player(cg, ball, constants.RIGHT, p2_interface)
 
     sound = constants.SOUND(constants.SOUND_PIN)
     sound.notes(constants.INTRO_MUS)
@@ -30,6 +53,8 @@ def main():
     serves = 5
     ball.serving = True
     ball.server = p1.bat
+
+    print("End initialisation, starting cg")
 
     with cg:
         net.draw()
@@ -44,6 +69,8 @@ def main():
         # affecting the bats.
         ball_refresh_time = time.perf_counter()
         bat_refresh_time = time.perf_counter()
+
+        print("initial objects drawn")
 
         playing = True
         while playing:

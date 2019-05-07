@@ -26,7 +26,8 @@ class GPIO_Button:
 
         self.last_pressed_time = time.perf_counter()
 
-        self.update()
+        self.value = False
+
 
     def update(self):
         if not self.debounce or time.perf_counter() - self.last_pressed_time >= constants.DEBOUNCE_TIME:

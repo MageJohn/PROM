@@ -31,7 +31,7 @@ I2C_BUTTON1_ADDR = 0x38
 I2C_BUTTON1_BIT = 7
 
 P1_AI = False
-P2_AI = False
+P2_AI = True
 
 if LOCAL:
     from input_ai import AI
@@ -43,29 +43,15 @@ if LOCAL:
     P2_INTERFACE = AI()
     FLUSHING = True
     SOUND = sound_dummy.SoundPlayer
+
+    P1_AI = True
+    P2_AI = True
 else:
-    import input_ad799_knob
-    import input_diy_knob
-    import input_gpio_button
-    import input_i2c_button
-    import input_interface
     from textserial import TextSerial
     import sound_player
 
     OUTPUT = TextSerial("/dev/ttyAMA0", 115200)
     DEBUG = True
-
-    if not P1_AI:
-        p1_knob = input_ad799_knob.AD799(AD799_ADDR)
-        p1_serve = input_gpio_button.GPIO_Button(PIN1, BUTTONS_ACTIVE_LOW, debounce=True)
-        p1_superbat = input_gpio_button.GPIO_Button(PIN2, BUTTONS_ACTIVE_LOW, debounce=True)
-        P1_INTERFACE = input_interface.HardwareInputs(p1_knob, p1_serve, p1_superbat)
-
-    if not P2_AI:
-        p2_knob = input_diy_knob.DIY_ADC(I2C_BUS, PIN0, DIY_ADC_ADDR, DIY_ADC_N_BITS)
-        p2_serve = input_i2c_button.I2C_Button(I2C_BUTTON0_ADDR, I2C_BUTTON0_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
-        p2_superbat = input_i2c_button.I2C_Button(I2C_BUTTON1_ADDR, I2C_BUTTON1_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
-        P2_INTERFACE = input_interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
 
     SOUND = sound_player.SoundPlayer
 

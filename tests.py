@@ -1,13 +1,14 @@
 import sys
 import time
 
-from graphics_shim import ConsoleGraphics
-from .. import constants
-import score
-import net
-import bat
-import ball
+from consolegraphics import ConsoleGraphics
+import constants
+import gameobj_score as score
+import gameobj_net as net
+import gameobj_bat as bat
+import gameobj_ball as ball
 
+import textserial
 
 class TestOut:
     def __init__(self):
@@ -22,14 +23,13 @@ class TestOut:
 
 
 def test_net():
-    out = TestOut()
+    out = textserial.TextSerial("/dev/ttyAMA0", 115200)
     cg = ConsoleGraphics(output=out)
     n = net.Net(cg, constants.NET_COL)
     with cg:
         n.draw()
         cg.out.flush()
         time.sleep(1)
-    print(out.total_written)
 
 
 def test_ball():
