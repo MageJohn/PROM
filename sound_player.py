@@ -9,6 +9,9 @@ class SoundPlayer:
         self._cur_note = None
         self._note_started = 0
         self._duration = 0
+
+        gpio.setwarnings(False)
+        gpio.setmode(gpio.BCM)
         self._pin = gpio.setup(pin, gpio.OUT)
         self._pwm = gpio.PWM(pin, 100)
 

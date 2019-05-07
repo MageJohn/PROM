@@ -1,6 +1,6 @@
 import time
 from PyGlow import PyGlow
-from .. import constants
+import constants
 
 b = constants.PIGLOW_B
 s = constants.PIGLOW_S

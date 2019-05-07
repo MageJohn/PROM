@@ -32,9 +32,18 @@ def main():
         p1_interface = AI()
 
     if not constants.P2_AI:
-        p2_knob = input_diy_knob.DIY_ADC(constants.I2C_BUS, constants.PIN0, constants.DIY_ADC_ADDR, constants.DIY_ADC_N_BITS)
-        p2_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR, constants.I2C_BUTTON0_BIT, constants.BUTTONS_ACTIVE_LOW, debounce=False)
-        p2_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON1_ADDR, constants.I2C_BUTTON1_BIT, constants.BUTTONS_ACTIVE_LOW, debounce=False)
+        p2_knob = input_diy_knob.DIY_ADC(constants.I2C_BUS,
+                                         constants.PIN0,
+                                         constants.DIY_ADC_ADDR,
+                                         constants.DIY_ADC_N_BITS)
+        p2_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR,
+                                               constants.I2C_BUTTON0_BIT,
+                                               constants.BUTTONS_ACTIVE_LOW,
+                                               debounce=False)
+        p2_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON1_ADDR,
+                                                  constants.I2C_BUTTON1_BIT,
+                                                  constants.BUTTONS_ACTIVE_LOW,
+                                                  debounce=False)
         p2_interface = input_interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
     else:
         p2_interface = AI()
@@ -54,14 +63,13 @@ def main():
     ball.serving = True
     ball.server = p1.bat
 
-    print("End initialisation, starting cg")
-
     with cg:
         net.draw()
         p1.score.draw()
         p2.score.draw()
         p1.bat.draw()
         p2.bat.draw()
+        cg.out.flush()
 
         # Code goes here for intro music
 
@@ -70,7 +78,6 @@ def main():
         ball_refresh_time = time.perf_counter()
         bat_refresh_time = time.perf_counter()
 
-        print("initial objects drawn")
 
         playing = True
         while playing:

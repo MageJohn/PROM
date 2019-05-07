@@ -7,6 +7,7 @@ class Net:
         self.color = color
 
     def draw(self):
+        print("net.draw()")
         mid = constants.SCR_WIDTH // 2
 
         # Set colors

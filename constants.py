@@ -30,7 +30,7 @@ I2C_BUTTON0_BIT = 6
 I2C_BUTTON1_ADDR = 0x38
 I2C_BUTTON1_BIT = 7
 
-P1_AI = False
+P1_AI = True
 P2_AI = True
 
 if LOCAL:
@@ -39,8 +39,6 @@ if LOCAL:
 
     OUTPUT = sys.stdout
     DEBUG = False
-    P1_INTERFACE = AI()
-    P2_INTERFACE = AI()
     FLUSHING = True
     SOUND = sound_dummy.SoundPlayer
 
