@@ -6,6 +6,7 @@ from .inputs import ai
 from .game_objects.net import Net
 from .game_objects.ball import Ball
 from .player import Player
+from .sound.sound_player import SoundPlayer, Note
 
 
 def main():
@@ -17,6 +18,9 @@ def main():
 
     p1 = Player(cg, ball, constants.LEFT, constants.P1_INTERFACE)
     p2 = Player(cg, ball, constants.RIGHT, constants.P2_INTERFACE)
+
+    sound = SoundPlayer(constants.SOUND_PIN)
+    sound.notes(constants.INTRO_MUS)
 
     if type(p1.interface) is ai.AI:
         p1.interface.give_inputs(ball, p1.bat)
@@ -74,8 +78,10 @@ def main():
                     if bat_collide:
                         ball.vector = bat_collide
                         ball.randomise_speed()
+                        sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
                     if wall_collide:
                         ball.vector = wall_collide
+                        sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
                 if ball.just_served:
                     ball.just_served = False
 
@@ -103,6 +109,8 @@ def main():
             if constants.FLUSHING:
                 # flush updates to screen
                 cg.out.flush()
+
+            sound.update()
 
 
 if __name__ == "__main__":

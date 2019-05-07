@@ -3,8 +3,8 @@ import time
 import RPi.GPIO as gpio
 
 
-class Player:
-    def __init__(self, pin, dc=30, note_gap=0):
+class SoundPlayer:
+    def __init__(self, pin, dc=30, note_gap=2):
         self._buffer = []
         self._cur_note = None
         self._note_started = 0
@@ -22,8 +22,9 @@ class Player:
         self._buffer = notes
 
     def update(self):
-        time_playing = time.perf_counter - self._note_started
-        if (self._cur_note or self._buffer) and time_playing - time.perf_counter() >= self._duration:
+        # time playing in milliseconds
+        time_playing = (time.perf_counter() - self._note_started) * 1000
+        if (self._cur_note or self._buffer) and time_playing >= self._duration:
             if self._buffer and not (self.note_gap and self._cur_note):
                 self._cur_note = self._buffer.pop(0)
                 self._pwm.ChangeFrequency(self._cur_note.frequency)

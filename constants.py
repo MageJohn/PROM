@@ -1,6 +1,7 @@
 import sys
 
 from .consolegraphics import ConsoleGraphics as cg
+from . import sound
 
 LOCAL = True
 
@@ -18,7 +19,9 @@ DIY_ADC_N_BITS = 6
 
 PIN0 = 10
 PIN1 = 9
-PIN2 = 8
+PIN2 = 11
+PIN3 = 14
+PIN4 = 15
 
 BUTTONS_ACTIVE_LOW = True
 
@@ -58,6 +61,13 @@ else:
         P2_INTERFACE = inputs.interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
 
     FLUSHING = False
+
+
+SOUND_PIN = PIN3
+WALL_TONE = 131
+BAT_TONE = 131
+TONE_LENGTH = 30
+INTRO_MUS = sound.pacman.notes
 
 # Speed at which the AI moves
 AI_SPEED = 3/SCR_HEIGHT
