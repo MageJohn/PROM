@@ -100,8 +100,6 @@ def main():
 
                 bat_refresh_time = time.perf_counter()
 
-            # Possible place for code which deals with smoothing
-
             if constants.FLUSHING:
                 # flush updates to screen
                 cg.out.flush()
