@@ -35,9 +35,3 @@ class SoundPlayer:
                 self._cur_note = None
                 self._duration = self.note_gap
             self._note_started = time.perf_counter()
-
-
-class Note:
-    def __init__(self, frequency, duration):
-        self.frequency = frequency
-        self.duration = duration

@@ -35,15 +35,18 @@ P2_AI = False
 
 if LOCAL:
     from .inputs import ai
+    from .sound import dummy_sound
 
     OUTPUT = sys.stdout
     DEBUG = False
     P1_INTERFACE = ai.AI()
     P2_INTERFACE = ai.AI()
     FLUSHING = True
+    SOUND = dummy_sound.SoundPlayer
 else:
     from . import inputs
     from .serial_wrapper import TextSerial
+    from .sound import sound_player
 
     OUTPUT = TextSerial("/dev/ttyAMA0", 115200)
     DEBUG = True
@@ -59,6 +62,8 @@ else:
         p2_serve = inputs.i2c_button.I2C_Button(I2C_BUTTON0_ADDR, I2C_BUTTON0_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
         p2_superbat = inputs.i2c_button.I2C_Button(I2C_BUTTON1_ADDR, I2C_BUTTON1_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
         P2_INTERFACE = inputs.interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
+
+    SOUND = sound_player.SoundPlayer
 
     FLUSHING = False
 

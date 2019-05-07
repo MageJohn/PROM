@@ -6,7 +6,7 @@ from .inputs import ai
 from .game_objects.net import Net
 from .game_objects.ball import Ball
 from .player import Player
-from .sound.sound_player import SoundPlayer, Note
+from .sound.note import Note
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
     p1 = Player(cg, ball, constants.LEFT, constants.P1_INTERFACE)
     p2 = Player(cg, ball, constants.RIGHT, constants.P2_INTERFACE)
 
-    sound = SoundPlayer(constants.SOUND_PIN)
+    sound = constants.SOUND(constants.SOUND_PIN)
     sound.notes(constants.INTRO_MUS)
 
     if type(p1.interface) is ai.AI:

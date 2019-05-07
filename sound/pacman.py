@@ -1,4 +1,4 @@
-from .player import Note
+from .note import Note
 
 
 notes = [
