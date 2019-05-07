@@ -1,4 +1,4 @@
-from .. import constants
+import constants
 
 SIDES = {constants.LEFT: 1, constants.RIGHT: -1}
 

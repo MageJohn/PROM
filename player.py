@@ -1,16 +1,16 @@
 import time
 import random
 
-from . import constants
-from .game_objects import score
-from .game_objects import bat
+import constants
+import gameobj_score
+import gameobj_bat
 
 
 class Player:
     def __init__(self, cg, ball, side, interface):
         self.ball = ball
-        self.bat = bat.Bat(cg, side, constants.BAT_COL)
-        self.score = score.Score(cg, side, constants.SCORE_COL)
+        self.bat = gameobj_bat.Bat(cg, side, constants.BAT_COL)
+        self.score = gameobj_score.Score(cg, side, constants.SCORE_COL)
         self.interface = interface
         self.superbat_time = 0
 

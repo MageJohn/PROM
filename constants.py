@@ -1,7 +1,7 @@
 import sys
 
-from .consolegraphics import ConsoleGraphics as cg
-from . import sound
+from consolegraphics import ConsoleGraphics as cg
+import sound_pacman
 
 LOCAL = True
 
@@ -34,34 +34,38 @@ P1_AI = False
 P2_AI = False
 
 if LOCAL:
-    from .inputs import ai
-    from .sound import dummy_sound
+    from input_ai import AI
+    import sound_dummy
 
     OUTPUT = sys.stdout
     DEBUG = False
-    P1_INTERFACE = ai.AI()
-    P2_INTERFACE = ai.AI()
+    P1_INTERFACE = AI()
+    P2_INTERFACE = AI()
     FLUSHING = True
-    SOUND = dummy_sound.SoundPlayer
+    SOUND = sound_dummy.SoundPlayer
 else:
-    from . import inputs
-    from .serial_wrapper import TextSerial
-    from .sound import sound_player
+    import input_ad799_knob
+    import input_diy_knob
+    import input_gpio_button
+    import input_i2c_button
+    import input_interface
+    from textserial import TextSerial
+    import sound_player
 
     OUTPUT = TextSerial("/dev/ttyAMA0", 115200)
     DEBUG = True
 
     if not P1_AI:
-        p1_knob = inputs.ad799_knob.AD799(AD799_ADDR)
-        p1_serve = inputs.gpio_button.GPIO_Button(PIN1, BUTTONS_ACTIVE_LOW, debounce=True)
-        p1_superbat = inputs.gpio_button.GPIO_Button(PIN2, BUTTONS_ACTIVE_LOW, debounce=True)
-        P1_INTERFACE = inputs.interface.HardwareInputs(p1_knob, p1_serve, p1_superbat)
+        p1_knob = input_ad799_knob.AD799(AD799_ADDR)
+        p1_serve = input_gpio_button.GPIO_Button(PIN1, BUTTONS_ACTIVE_LOW, debounce=True)
+        p1_superbat = input_gpio_button.GPIO_Button(PIN2, BUTTONS_ACTIVE_LOW, debounce=True)
+        P1_INTERFACE = input_interface.HardwareInputs(p1_knob, p1_serve, p1_superbat)
 
     if not P2_AI:
-        p2_knob = inputs.diy_knob.DIY_ADC(I2C_BUS, PIN0, DIY_ADC_ADDR, DIY_ADC_N_BITS)
-        p2_serve = inputs.i2c_button.I2C_Button(I2C_BUTTON0_ADDR, I2C_BUTTON0_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
-        p2_superbat = inputs.i2c_button.I2C_Button(I2C_BUTTON1_ADDR, I2C_BUTTON1_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
-        P2_INTERFACE = inputs.interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
+        p2_knob = input_diy_knob.DIY_ADC(I2C_BUS, PIN0, DIY_ADC_ADDR, DIY_ADC_N_BITS)
+        p2_serve = input_i2c_button.I2C_Button(I2C_BUTTON0_ADDR, I2C_BUTTON0_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
+        p2_superbat = input_i2c_button.I2C_Button(I2C_BUTTON1_ADDR, I2C_BUTTON1_BIT, BUTTONS_ACTIVE_LOW, debounce=False)
+        P2_INTERFACE = input_interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
 
     SOUND = sound_player.SoundPlayer
 
@@ -72,7 +76,7 @@ SOUND_PIN = PIN3
 WALL_TONE = 131
 BAT_TONE = 131
 TONE_LENGTH = 30
-INTRO_MUS = sound.pacman.notes
+INTRO_MUS = sound_pacman.notes
 
 # Speed at which the AI moves
 AI_SPEED = 3/SCR_HEIGHT

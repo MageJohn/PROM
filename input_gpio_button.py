@@ -2,7 +2,7 @@ import time
 
 import RPi.GPIO as gpio
 
-from .. import constants
+import constants
 
 ACTIVE_LOW = gpio.PUD_UP
 ACTIVE_HIGH = gpio.PUD_DOWN

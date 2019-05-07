@@ -1,4 +1,4 @@
-from .. import constants
+import constants
 import smbus
 
 CH1 = 0x10

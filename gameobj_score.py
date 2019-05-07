@@ -1,4 +1,4 @@
-from .. import constants
+import constants
 
 NUM_WIDTH = 3
 NUM_HEIGHT = 5

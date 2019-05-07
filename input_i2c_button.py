@@ -1,7 +1,7 @@
 import time
 import smbus
 
-from .. import constants
+import constants
 
 
 class I2C_Button:

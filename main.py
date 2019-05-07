@@ -1,12 +1,12 @@
 import time
 
-from .consolegraphics import ConsoleGraphics
-from . import constants
-from .inputs import ai
-from .game_objects.net import Net
-from .game_objects.ball import Ball
-from .player import Player
-from .sound.note import Note
+from consolegraphics import ConsoleGraphics
+import constants
+from input_ai import AI
+from gameobj_net import Net
+from gameobj_ball import Ball
+from player import Player
+from sound_note import Note
 
 
 def main():
@@ -22,9 +22,9 @@ def main():
     sound = constants.SOUND(constants.SOUND_PIN)
     sound.notes(constants.INTRO_MUS)
 
-    if type(p1.interface) is ai.AI:
+    if type(p1.interface) is AI:
         p1.interface.give_inputs(ball, p1.bat)
-    if type(p2.interface) is ai.AI:
+    if type(p2.interface) is AI:
         p2.interface.give_inputs(ball, p2.bat)
 
     serves = 5

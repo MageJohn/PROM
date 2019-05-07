@@ -5,7 +5,7 @@ import smbus
 
 import RPi.GPIO as gpio
 
-from .. import constants
+import constants
 
 
 class DIY_ADC():

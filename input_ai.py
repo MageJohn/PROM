@@ -1,8 +1,7 @@
-import sys
 import time
 import random
 
-from .. import constants
+import constants
 
 MISS_GAP = 2
 

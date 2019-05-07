@@ -1,6 +1,6 @@
 import random
 
-from .. import constants
+import constants
 
 
 class Ball:
