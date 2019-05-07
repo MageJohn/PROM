@@ -106,3 +106,7 @@ BAT_COL = cg.MAGENTA
 # Used differently by different classes
 LEFT = 'left'
 RIGHT = 'right'
+
+# PiGlow brightness and speed
+PIGLOW_B = 255 #Brightness from 0-255
+PIGLOW_S = 1000 #Speed in milliseconds
