@@ -3,3 +3,6 @@
 Integrate hardware diagnostic display
 End game screen showing who won
 Integrate/create PiGlow light sequences
+Connect debounce circuit works
+Add sound effects
+Anything else that needs doing
