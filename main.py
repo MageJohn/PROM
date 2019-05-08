@@ -8,8 +8,7 @@ from gameobj_ball import Ball
 from player import Player
 from sound_note import Note
 from diagdisplay import Diagnostics
-
-print(constants.LEFT)
+from ball_leds import BallLEDs
 
 if not constants.P1_AI or not constants.P2_AI:
     import input_ad799_knob
@@ -25,6 +24,8 @@ def main():
 
     net = Net(cg, constants.NET_COL)
     ball = Ball(cg, constants.BALL_COL)
+
+    ball_leds = BallLEDs()
 
     if not constants.P1_AI:
         p1_knob = input_ad799_knob.AD799(constants.AD799_ADDR)
@@ -134,6 +135,8 @@ def main():
                     # Code goes here for bounce events; e.g. sound effects
 
                 ball.move()
+
+                ball_leds.update(ball.pos[1])
 
                 # Code goes here for LEDs indicating ball pos
 
