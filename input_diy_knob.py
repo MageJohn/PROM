@@ -10,19 +10,19 @@ import constants
 
 class DIY_ADC():
     def __init__(self, bus, pin, i2c_addr, bits):
-        self.i2c_addr = smbus.SMBus(bus)
-        self.bus = bus
+        self.i2c_addr = i2c_addr
+        self.bus = smbus.SMBus(bus)
         self.pin = pin
         self.bits = bits
 
-        self.bus._write_byte(self.i2c_addr, 0)  # clear port
+        self.bus.write_byte(self.i2c_addr, 0)  # clear port
 
         gpio.setwarnings(False)
         gpio.setmode(gpio.BCM)
         gpio.setup(self.pin, gpio.IN, pull_up_down=gpio.PUD_UP)
 
     def _write(self, value):
-        self.bus._write_byte(self.i2c_addr, value)
+        self.bus.write_byte(self.i2c_addr, value)
 
     def _get_comp(self):
         return gpio.input(self.pin)

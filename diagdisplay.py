@@ -25,8 +25,8 @@ class Diagnostics:
         ball = self.ball.pos
         score = [self.p1.score.score,self.p2.score.score]
         
-        for p, r in zip((player1, player2), (4,5)):
-            print("\x1B[{1};H|   1    |   {0[0]}    |   {0[1]}  |   {0[2]}  |   {0[3]}    |  {0[4]}   |".format(p, r))
+        print("\x1B[4;H|   1    |   {0[0]}   |   {0[1]}  |   {0[2]}  |   {0[3]}    |  {0[4]}   |".format(player1))
+        print("\x1B[5;H|   2    |   {0[0]}   |   {0[1]}  |   {0[2]}  |   {0[3]}    |  {0[4]}   |".format(player2))
         print("\x1B[8;HBall Position: ({0[0]},{0[1]})".format(ball))
         print("\x1B[9;HScore: {0[0]}/{0[1]}".format(score))
 
@@ -46,7 +46,7 @@ class Diagnostics:
         else:
             superBats = "\x1B[31m"+str(superBat)+"\x1B[0m"
             
-        player=[str(adcVal).center(3), str(button1s).center(5), str(button2s).center(5), str(batPos).center(3), str(superBats).center(5)]
+        player=[str(adcVal).center(4), str(button1s).center(5), str(button2s).center(5), str(batPos).center(3), str(superBats).center(5)]
         #centers all the values
         return player
         

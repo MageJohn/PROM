@@ -12,12 +12,13 @@ class I2C_Button:
         self.active_low = active_low
         self.debounce = debounce
         self.last_pressed_time = time.perf_counter()
+        self.value = False
 
         self.update()
 
     def update(self):
         if not self.debounce or time.perf_counter() - self.last_pressed_time >= constants.DEBOUNCE_TIME:
-            self.bus.write(self.addr, 0xFF)
+            self.bus.write_byte(self.addr, 0xFF)
             self.value = bool(self.bus.read_byte(self.addr) & self.mask)
             if self.active_low:
                 self.value = not self.value

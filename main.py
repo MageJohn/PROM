@@ -29,12 +29,14 @@ def main():
 
     if not constants.P1_AI:
         p1_knob = input_ad799_knob.AD799(constants.AD799_ADDR)
-        p1_serve = input_gpio_button.GPIO_Button(constants.PIN1,
-                                                 constants.BUTTONS_ACTIVE_LOW,
-                                                 debounce=True)
-        p1_superbat = input_gpio_button.GPIO_Button(constants.PIN2,
-                                                    constants.BUTTONS_ACTIVE_LOW,
-                                                    debounce=True)
+        p1_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON2_ADDR,
+                                               constants.I2C_BUTTON2_BIT,
+                                               constants.BUTTONS_P1_ACTIVE_LOW,
+                                               debounce=False)
+        p1_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON3_ADDR,
+                                                  constants.I2C_BUTTON3_BIT,
+                                                  constants.BUTTONS_P1_ACTIVE_LOW,
+                                                  debounce=False)
         p1_interface = input_interface.HardwareInputs(p1_knob,
                                                       p1_serve,
                                                       p1_superbat)
@@ -48,12 +50,12 @@ def main():
                                          constants.DIY_ADC_N_BITS)
         p2_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR,
                                                constants.I2C_BUTTON0_BIT,
-                                               constants.BUTTONS_ACTIVE_LOW,
-                                               debounce=False)
+                                               constants.BUTTONS_P2_ACTIVE_LOW,
+                                               debounce=True)
         p2_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON1_ADDR,
                                                   constants.I2C_BUTTON1_BIT,
-                                                  constants.BUTTONS_ACTIVE_LOW,
-                                                  debounce=False)
+                                                  constants.BUTTONS_P2_ACTIVE_LOW,
+                                                  debounce=True)
         p2_interface = input_interface.HardwareInputs(p2_knob,
                                                       p2_serve,
                                                       p2_superbat)
