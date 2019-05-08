@@ -7,6 +7,9 @@ from gameobj_net import Net
 from gameobj_ball import Ball
 from player import Player
 from sound_note import Note
+from diagdisplay import Diagnostics
+
+print(constants.LEFT)
 
 if not constants.P1_AI or not constants.P2_AI:
     import input_ad799_knob
@@ -25,11 +28,17 @@ def main():
 
     if not constants.P1_AI:
         p1_knob = input_ad799_knob.AD799(constants.AD799_ADDR)
-        p1_serve = input_gpio_button.GPIO_Button(constants.PIN1, constants.BUTTONS_ACTIVE_LOW, debounce=True)
-        p1_superbat = input_gpio_button.GPIO_Button(constants.PIN2, constants.BUTTONS_ACTIVE_LOW, debounce=True)
-        p1_interface = input_interface.HardwareInputs(p1_knob, p1_serve, p1_superbat)
+        p1_serve = input_gpio_button.GPIO_Button(constants.PIN1,
+                                                 constants.BUTTONS_ACTIVE_LOW,
+                                                 debounce=True)
+        p1_superbat = input_gpio_button.GPIO_Button(constants.PIN2,
+                                                    constants.BUTTONS_ACTIVE_LOW,
+                                                    debounce=True)
+        p1_interface = input_interface.HardwareInputs(p1_knob,
+                                                      p1_serve,
+                                                      p1_superbat)
     else:
-        p1_interface = AI()
+        p1_interface = AI(ball=ball)
 
     if not constants.P2_AI:
         p2_knob = input_diy_knob.DIY_ADC(constants.I2C_BUS,
@@ -44,20 +53,24 @@ def main():
                                                   constants.I2C_BUTTON1_BIT,
                                                   constants.BUTTONS_ACTIVE_LOW,
                                                   debounce=False)
-        p2_interface = input_interface.HardwareInputs(p2_knob, p2_serve, p2_superbat)
+        p2_interface = input_interface.HardwareInputs(p2_knob,
+                                                      p2_serve,
+                                                      p2_superbat)
     else:
-        p2_interface = AI()
+        p2_interface = AI(ball=ball)
 
     p1 = Player(cg, ball, constants.LEFT, p1_interface)
     p2 = Player(cg, ball, constants.RIGHT, p2_interface)
 
-    sound = constants.SOUND(constants.SOUND_PIN)
-    sound.notes(constants.INTRO_MUS)
+    # sound = constants.SOUND(constants.SOUND_PIN)
+    # sound.notes(constants.INTRO_MUS)
 
     if type(p1.interface) is AI:
-        p1.interface.give_inputs(ball, p1.bat)
+        p1.interface.give_inputs(bat=p1.bat)
     if type(p2.interface) is AI:
-        p2.interface.give_inputs(ball, p2.bat)
+        p2.interface.give_inputs(bat=p2.bat)
+
+    diag = Diagnostics(p1, p2, ball)
 
     serves = 5
     ball.serving = True
@@ -77,7 +90,6 @@ def main():
         # affecting the bats.
         ball_refresh_time = time.perf_counter()
         bat_refresh_time = time.perf_counter()
-
 
         playing = True
         while playing:
@@ -112,10 +124,10 @@ def main():
                     if bat_collide:
                         ball.vector = bat_collide
                         ball.randomise_speed()
-                        sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
+                        # sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
                     if wall_collide:
                         ball.vector = wall_collide
-                        sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
+                        # sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
                 if ball.just_served:
                     ball.just_served = False
 
@@ -135,6 +147,8 @@ def main():
                 p1.update()
                 p2.update()
 
+                diag.print_diag()
+
                 p1.bat.draw()
                 p2.bat.draw()
 
@@ -144,7 +158,12 @@ def main():
                 # flush updates to screen
                 cg.out.flush()
 
-            sound.update()
+            # sound.update()
+    if p1.score.score == 9:
+        winner = "Player 1"
+    if p2.score.score == 9:
+        winner = "Player 2"
+    print("The winner is {}".format(winner))
 
 
 if __name__ == "__main__":
