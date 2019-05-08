@@ -1,14 +1,16 @@
 import time
-from PyGlow import PyGlow
+from .PyGlow import PyGlow
 import constants
 
-b = constants.PIGLOW_B
-s = constants.PIGLOW_S
-pyglow = PyGlow(brightness = b, speed = s, pulse=True)
+class PulseLights:
+    def __init__(self):
+        self.b = constants.PIGLOW_B
+        self.s = constants.PIGLOW_S
+        self.pyglow = PyGlow(brightness=self.b, speed=self.s, pulse=True)
 
-pyglow.all(0) #Set all LEDs to 0
+    def activate(self):
+        self.pyglow.all(0)  #Set all LEDs to 0
 
-pyglow.all(brightness=b)
-time.sleep(s/1000)
+        self.pyglow.all(brightness=self.b)
 
-pyglow.all(0) #Set all LEDs to 0
+        self.pyglow.all(0)  #Set all LEDs to 0

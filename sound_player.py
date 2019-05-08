@@ -12,7 +12,7 @@ class SoundPlayer:
 
         gpio.setwarnings(False)
         gpio.setmode(gpio.BCM)
-        self._pin = gpio.setup(pin, gpio.OUT)
+        gpio.setup(pin, gpio.OUT)
         self._pwm = gpio.PWM(pin, 100)
 
         self.dc = dc

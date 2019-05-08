@@ -10,10 +10,12 @@ from sound_note import Note
 from diagdisplay import Diagnostics
 from ball_leds import BallLEDs
 
+if not constants.LOCAL:
+    from lights import pulse_all
+
 if not constants.P1_AI or not constants.P2_AI:
     import input_ad799_knob
     import input_diy_knob
-    import input_gpio_button
     import input_i2c_button
     import input_interface
 
@@ -26,6 +28,8 @@ def main():
     ball = Ball(cg, constants.BALL_COL)
 
     ball_leds = BallLEDs()
+
+    pulse = pulse_all.PulseLights()
 
     if not constants.P1_AI:
         p1_knob = input_ad799_knob.AD799(constants.AD799_ADDR)
@@ -101,9 +105,11 @@ def main():
                     if ball.pos[1] == 0:
                         p2.score.score += 1
                         p2.score.draw()
+                        pulse.activate()
                     else:
                         p1.score.score += 1
                         p1.score.draw()
+                        pulse.activate()
 
                     ball.serving = True
                     ball.speed = constants.BAT_SPEED

@@ -111,8 +111,8 @@ LEFT = 'left'
 RIGHT = 'right'
 
 # PiGlow brightness and speed
-PIGLOW_B = 255 #Brightness from 0-255
-PIGLOW_S = 1000 #Speed in milliseconds
+PIGLOW_B = 128 #Brightness from 0-255
+PIGLOW_S = 500 #Speed in milliseconds
 
 BALL_LED_PINS = (5, 6, 12, 13, 16, 19, 20, 26)
 BALL_LED_I2C_ADDR = 0x39
