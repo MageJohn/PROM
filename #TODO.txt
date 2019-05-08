@@ -1,6 +1,8 @@
 #TODO
 
+Update logbooks
 Integrate hardware diagnostic display
+LED display on Pi
 End game screen showing who won
 Integrate/create PiGlow light sequences
 Connect debounce circuit works
