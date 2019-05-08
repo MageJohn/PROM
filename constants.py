@@ -3,7 +3,7 @@ import sys
 from consolegraphics import ConsoleGraphics as cg
 import sound_pacman
 
-LOCAL = True
+LOCAL = False
 
 # Screen sizes
 SCR_WIDTH = 80
