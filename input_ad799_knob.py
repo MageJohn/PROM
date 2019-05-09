@@ -26,7 +26,7 @@ class AD799:
         percentage = (value - constants.INPUT_AD799_MIN) / \
                      (constants.INPUT_AD799_MAX - constants.INPUT_AD799_MIN)
 
-        y = int((percentage * (constants.SCR_HEIGHT - constants.SCR_MIN)) + 1)
+        y = int((percentage * (constants.SCR_HEIGHT - constants.SCR_MIN)) + constants.SCR_MIN)
 
         self.value = value
         self.bat_y = y
@@ -38,6 +38,6 @@ if __name__ == '__main__':
     try:
         while True:
             adc.update()
-            print("\rvalue = {}, y = {}".format(adc.value, adc.bat_y), end='')
+            print("\rvalue = {:<4}, y = {:<2}".format(adc.value, adc.bat_y), end='')
     except KeyboardInterrupt:
         print()

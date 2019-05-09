@@ -10,7 +10,7 @@ from sound_note import Note
 from diagdisplay import Diagnostics
 from ball_leds import BallLEDs
 
-if not constants.LOCAL:
+if constants.PIGLOW:
     from lights import pulse_all
 
 if not constants.P1_AI or not constants.P2_AI:
@@ -29,7 +29,8 @@ def main():
 
     ball_leds = BallLEDs()
 
-    pulse = pulse_all.PulseLights()
+    if constants.PIGLOW:
+        pulse = pulse_all.PulseLights()
 
     if not constants.P1_AI:
         p1_knob = input_ad799_knob.AD799(constants.AD799_ADDR)
@@ -39,7 +40,7 @@ def main():
                                                debounce=False)
         p1_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON3_ADDR,
                                                   constants.I2C_BUTTON3_BIT,
-                                                  constants.BUTTONS_P1_ACTIVE_LOW,
+                                                  constants.BUTTONS_P2_ACTIVE_LOW,
                                                   debounce=False)
         p1_interface = input_interface.HardwareInputs(p1_knob,
                                                       p1_serve,
@@ -49,7 +50,7 @@ def main():
 
     if not constants.P2_AI:
         p2_knob = input_diy_knob.DIY_ADC(constants.I2C_BUS,
-                                         constants.PIN0,
+                                         constants.DIY_ADC_PIN,
                                          constants.DIY_ADC_ADDR,
                                          constants.DIY_ADC_N_BITS)
         p2_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR,
@@ -105,11 +106,13 @@ def main():
                     if ball.pos[1] == 0:
                         p2.score.score += 1
                         p2.score.draw()
-                        pulse.activate()
+                        if constants.PIGLOW:
+                            pulse.activate()
                     else:
                         p1.score.score += 1
                         p1.score.draw()
-                        pulse.activate()
+                        if constants.PIGLOW:
+                            pulse.activate()
 
                     ball.serving = True
                     ball.speed = constants.BAT_SPEED
@@ -158,7 +161,8 @@ def main():
                 p1.update()
                 p2.update()
 
-                diag.print_diag()
+                if constants.DEBUG:
+                    diag.print_diag()
 
                 p1.bat.draw()
                 p2.bat.draw()

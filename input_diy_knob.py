@@ -56,20 +56,20 @@ class DIY_ADC():
         percentage = (self.value - constants.INPUT_DIY_ADC_MIN) / \
                      (constants.INPUT_DIY_ADC_MAX - constants.INPUT_DIY_ADC_MIN)
 
-        self.bat_y = int((percentage * (constants.SCR_HEIGHT - constants.SCR_MIN)) + 1)
+        self.bat_y = int((percentage * (constants.SCR_HEIGHT - constants.SCR_MIN)) + constants.SCR_MIN)
 
 
 if __name__ == '__main__':
-    PIN = 10
-    I2C_ADDR = 0x38
-    BITS = 6
-    BUS = 1
+    BUS = constants.I2C_BUS
+    PIN = constants.DIY_ADC_PIN
+    I2C_ADDR = constants.DIY_ADC_ADDR
+    BITS = constants.DIY_ADC_N_BITS
 
     adc = DIY_ADC(BUS, PIN, I2C_ADDR, BITS)
 
     try:
         while True:
             adc.update()
-            print("\rvalue = {}, y = {}".format(adc.value, adc.bat_y), end='')
+            print("\rvalue = {:<4}, y = {:<2}".format(adc.value, adc.bat_y), end='')
     except KeyboardInterrupt:
         print()

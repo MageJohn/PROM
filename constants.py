@@ -3,43 +3,44 @@ import sys
 from consolegraphics import ConsoleGraphics as cg
 import sound_pacman
 
-LOCAL = False
+LOCAL = True
 
 # Screen sizes
 SCR_WIDTH = 80
 SCR_HEIGHT = 24
 SCR_MIN = 1
 
+PIN0 = 10
+PIN1 = 9
+
 I2C_BUS = 1
 
 AD799_ADDR = 0x21
+INPUT_AD799_MAX = 4090
+INPUT_AD799_MIN = 0
+
+INPUT_DIY_ADC_MAX = 40
+INPUT_DIY_ADC_MIN = 0
 DIY_ADC_ADDR = 0x38
-
 DIY_ADC_N_BITS = 6
+DIY_ADC_PIN = PIN1
 
-PIN0 = 10
-PIN1 = 9
-PIN2 = 11
-PIN3 = 14
-PIN4 = 15
-
-BUTTONS_P1_ACTIVE_LOW = False
-BUTTONS_P2_ACTIVE_LOW = True
+BUTTONS_P1_ACTIVE_LOW = True
+BUTTONS_P2_ACTIVE_LOW = False
 
 I2C_BUTTON0_ADDR = 0x38
 I2C_BUTTON0_BIT = 6
 I2C_BUTTON1_ADDR = 0x38
 I2C_BUTTON1_BIT = 7
 I2C_BUTTON2_ADDR = 0x3A
-I2C_BUTTON2_BIT = 0
+I2C_BUTTON2_BIT = 6
 I2C_BUTTON3_ADDR = 0x3A
-I2C_BUTTON3_BIT = 1
+I2C_BUTTON3_BIT = 7
 
 P1_AI = False
 P2_AI = False
 
 if LOCAL:
-    from input_ai import AI
     import sound_dummy
 
     OUTPUT = sys.stdout
@@ -47,8 +48,10 @@ if LOCAL:
     FLUSHING = True
     SOUND = sound_dummy.SoundPlayer
 
-    P1_AI = True
-    P2_AI = True
+    PIGLOW = False
+
+    P1_AI = False
+    P2_AI = False
 else:
     from textserial import TextSerial
     import sound_player
@@ -60,8 +63,9 @@ else:
 
     FLUSHING = False
 
+    PIGLOW = True
 
-SOUND_PIN = PIN3
+SOUND_PIN = PIN1
 WALL_TONE = 131
 BAT_TONE = 131
 TONE_LENGTH = 30
@@ -70,11 +74,6 @@ INTRO_MUS = sound_pacman.notes
 # Speed at which the AI moves
 AI_SPEED = 3/SCR_HEIGHT
 
-INPUT_AD799_MAX = 4090
-INPUT_AD799_MIN = 0
-
-INPUT_DIY_ADC_MAX = 41
-INPUT_DIY_ADC_MIN = 0
 
 DEBOUNCE_TIME = 0.2
 
