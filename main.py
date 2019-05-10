@@ -2,23 +2,27 @@ import time
 
 from consolegraphics import ConsoleGraphics
 import constants
-from input_ai import AI
-from gameobj_net import Net
-from gameobj_ball import Ball
+from inputs.ai import AI
+from game_objects.net import Net
+from game_objects.ball import Ball
 from player import Player
-from sound_note import Note
+from sound.note import Note
 from diagdisplay import Diagnostics
-from ball_leds import BallLEDs
-from countdown import Countdown
+
+if constants.COUNTDOWN:
+    from countdown import Countdown
+
+if constants.BALL_LEDS:
+    from ball_leds import BallLEDs
 
 if constants.PIGLOW:
     from lights import pulse_all
 
 if not constants.P1_AI or not constants.P2_AI:
-    import input_ad799_knob
-    import input_diy_knob
-    import input_i2c_button
-    import input_interface
+    import inputs.ad799_knob
+    import inputs.diy_knob
+    import inputs.i2c_button
+    import inputs.interface
 
 
 def main():
@@ -28,41 +32,42 @@ def main():
     net = Net(cg, constants.NET_COL)
     ball = Ball(cg, constants.BALL_COL)
 
-    ball_leds = BallLEDs()
+    if constants.BALL_LEDS:
+        ball_leds = BallLEDs()
 
     if constants.PIGLOW:
         pulse = pulse_all.PulseLights()
 
     if not constants.P1_AI:
-        p1_knob = input_ad799_knob.AD799(constants.AD799_ADDR)
-        p1_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON2_ADDR,
+        p1_knob = inputs.ad799_knob.AD799(constants.AD799_ADDR)
+        p1_serve = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON2_ADDR,
                                                constants.I2C_BUTTON2_BIT,
                                                constants.BUTTONS_P1_ACTIVE_LOW,
                                                debounce=False)
-        p1_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON3_ADDR,
+        p1_superbat = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON3_ADDR,
                                                   constants.I2C_BUTTON3_BIT,
                                                   constants.BUTTONS_P2_ACTIVE_LOW,
                                                   debounce=False)
-        p1_interface = input_interface.HardwareInputs(p1_knob,
+        p1_interface = inputs.interface.HardwareInputs(p1_knob,
                                                       p1_serve,
                                                       p1_superbat)
     else:
         p1_interface = AI(ball=ball)
 
     if not constants.P2_AI:
-        p2_knob = input_diy_knob.DIY_ADC(constants.I2C_BUS,
+        p2_knob = inputs.diy_knob.DIY_ADC(constants.I2C_BUS,
                                          constants.DIY_ADC_PIN,
                                          constants.DIY_ADC_ADDR,
                                          constants.DIY_ADC_N_BITS)
-        p2_serve = input_i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR,
+        p2_serve = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR,
                                                constants.I2C_BUTTON0_BIT,
                                                constants.BUTTONS_P2_ACTIVE_LOW,
                                                debounce=True)
-        p2_superbat = input_i2c_button.I2C_Button(constants.I2C_BUTTON1_ADDR,
+        p2_superbat = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON1_ADDR,
                                                   constants.I2C_BUTTON1_BIT,
                                                   constants.BUTTONS_P2_ACTIVE_LOW,
                                                   debounce=True)
-        p2_interface = input_interface.HardwareInputs(p2_knob,
+        p2_interface = inputs.interface.HardwareInputs(p2_knob,
                                                       p2_serve,
                                                       p2_superbat)
     else:
@@ -94,10 +99,11 @@ def main():
         if constants.FLUSHING:
             cg.out.flush()
 
-        cd = Countdown(constants.I2C_BUS, constants.COUNTDOWN_ADDR,
-                       constants.COUNTDOWN_N_BITS, constants.COUNTDOWN_LSB,
-                       constants.COUNTDOWN_SPEED)
-        cd.activate()
+        if constants.COUNTDOWN:
+            cd = Countdown(constants.I2C_BUS, constants.COUNTDOWN_ADDR,
+                           constants.COUNTDOWN_N_BITS, constants.COUNTDOWN_LSB,
+                           constants.COUNTDOWN_SPEED)
+            cd.activate()
 
         # Code goes here for intro music
 
@@ -154,7 +160,8 @@ def main():
 
                 ball.move()
 
-                ball_leds.update(ball.pos[1])
+                if constants.BALL_LEDS:
+                    ball_leds.update(ball.pos[1])
 
                 # Code goes here for LEDs indicating ball pos
 

@@ -1,7 +1,7 @@
 import sys
 
 from consolegraphics import ConsoleGraphics as cg
-import sound_pacman
+import sound.pacman
 
 # Flag used to easily switch between sets of constants designed
 # for local testing or actual running
@@ -16,29 +16,31 @@ P1_AI = False
 P2_AI = False
 
 if LOCAL:
-    import sound_dummy
+    import sound.dummy
 
     OUTPUT = sys.stdout
     DEBUG = False
     FLUSHING = True
-    SOUND = sound_dummy.SoundPlayer
+    SOUND = sound.dummy.SoundPlayer
 
     PIGLOW = False
+    BALL_LEDS = False
+    COUNTDOWN = False
 
     P1_AI = True
     P2_AI = True
 else:
     from textserial import TextSerial
-    import sound_player
+    import sound.player
 
     OUTPUT = TextSerial("/dev/ttyAMA0", 115200)
     DEBUG = True
-
-    SOUND = sound_player.SoundPlayer
-
     FLUSHING = False
+    SOUND = sound.player.SoundPlayer
 
     PIGLOW = True
+    BALL_LEDS = False
+    COUNTDOWN = True
 
 I2C_BUS = 1
 
@@ -81,7 +83,7 @@ SOUND_PIN = 3
 WALL_TONE = 131
 BAT_TONE = 131
 TONE_LENGTH = 30
-INTRO_MUS = sound_pacman.notes
+INTRO_MUS = sound.pacman.notes
 
 # Speed at which the AI moves
 AI_SPEED = 3/SCR_HEIGHT

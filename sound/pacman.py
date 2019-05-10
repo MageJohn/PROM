@@ -1,4 +1,4 @@
-from sound_note import Note
+from .note import Note
 
 
 notes = [
