@@ -37,6 +37,8 @@ class Bat:
         self.length = constants.BAT_LENGTH
 
     def draw(self):
+        if self.old_y == self.y:
+            return
         # Set the bacground color
         self.cg.write("\x1B[{}m".format(self.cg.bgcolor))
 
@@ -67,13 +69,17 @@ class Bat:
             self.cg.write(self.cg.BG)
 
     def collide(self, ball):
+        collision = True
         if not (ball.pos[1] == self.col + self.side):
-            return
-        if ball.pos[0] in range(self.y - 1, self.y + self.length // 3):
-            return [-1, self.side]
+            collision = False
+        elif ball.pos[0] in range(self.y - 1, self.y + self.length // 3):
+            ball.vector = [-1, self.side]
         elif ball.pos[0] in range(self.y + self.length // 3,
                                   self.y + 2 * self.length // 3):
-            return [0, self.side]
+            ball.vector = [0, self.side]
         elif ball.pos[0] in range(self.y + 2 * self.length // 3,
                                   self.y + self.length + 1):
-            return [1, self.side]
+            ball.vector = [1, self.side]
+        else:
+            collision = False
+        return collision

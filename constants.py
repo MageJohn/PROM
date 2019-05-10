@@ -63,14 +63,18 @@ DIY_ADC_PIN = 9
 BUTTONS_P1_ACTIVE_LOW = True
 BUTTONS_P2_ACTIVE_LOW = False
 
-I2C_BUTTON0_ADDR = 0x38
-I2C_BUTTON0_BIT = 6
-I2C_BUTTON1_ADDR = 0x38
-I2C_BUTTON1_BIT = 7
-I2C_BUTTON2_ADDR = 0x3A
-I2C_BUTTON2_BIT = 6
-I2C_BUTTON3_ADDR = 0x3A
-I2C_BUTTON3_BIT = 7
+BUTTON0_ADDR = 0x38
+BUTTON0_BIT = 6
+BUTTON0_ACTIVE_LOW = True
+BUTTON1_ADDR = 0x38
+BUTTON1_BIT = 7
+BUTTON1_ACTIVE_LOW = True
+BUTTON2_ADDR = 0x3A
+BUTTON2_BIT = 6
+BUTTON2_ACTIVE_LOW = False
+BUTTON3_ADDR = 0x3A
+BUTTON3_BIT = 7
+BUTTON3_ACTIVE_LOW = False
 
 # Delay between each decrement of the countdown
 COUNTDOWN_SPEED = 0.5
@@ -112,6 +116,12 @@ BAT_SUPERLENGTH = 6
 SUPERBATS = 2
 # How long the superbats last in seconds
 SUPERBAT_TIME = 15
+
+# Number of serves before switching sides
+N_SERVES = 5
+
+# Winning score
+WIN_SCORE = 9
 
 # The colors for different game objects
 BALL_COL = cg.RED

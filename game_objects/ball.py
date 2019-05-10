@@ -50,5 +50,7 @@ class Ball:
     def collide(self):
         vec = list(self.vector)
         if self.pos[0] <= 1 or self.pos[0] >= constants.SCR_HEIGHT:
-            vec[0] = -vec[0]
-            return vec
+            self.vector[0] = -self.vector[0]
+            return True
+        else:
+            return False

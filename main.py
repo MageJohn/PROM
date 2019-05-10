@@ -1,7 +1,7 @@
 import time
 
-from consolegraphics import ConsoleGraphics
 import constants
+from consolegraphics import ConsoleGraphics
 from inputs.ai import AI
 from game_objects.net import Net
 from game_objects.ball import Ball
@@ -19,10 +19,10 @@ if constants.PIGLOW:
     from lights import pulse_all
 
 if not constants.P1_AI or not constants.P2_AI:
-    import inputs.ad799_knob
-    import inputs.diy_knob
-    import inputs.i2c_button
-    import inputs.interface
+    from inputs.ad799_knob import AD799
+    from inputs.diy_knob import DIY_ADC
+    from inputs.i2c_button import I2C_Button
+    from inputs.interface import HardwareInputs
 
 
 def main():
@@ -39,37 +39,37 @@ def main():
         pulse = pulse_all.PulseLights()
 
     if not constants.P1_AI:
-        p1_knob = inputs.ad799_knob.AD799(constants.AD799_ADDR)
-        p1_serve = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON2_ADDR,
-                                               constants.I2C_BUTTON2_BIT,
-                                               constants.BUTTONS_P1_ACTIVE_LOW,
-                                               debounce=False)
-        p1_superbat = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON3_ADDR,
-                                                  constants.I2C_BUTTON3_BIT,
-                                                  constants.BUTTONS_P2_ACTIVE_LOW,
-                                                  debounce=False)
-        p1_interface = inputs.interface.HardwareInputs(p1_knob,
-                                                      p1_serve,
-                                                      p1_superbat)
+        p1_knob = AD799(constants.AD799_ADDR)
+        p1_serve = I2C_Button(constants.BUTTON2_ADDR,
+                              constants.BUTTON2_BIT,
+                              constants.BUTTON2_ACTIVE_LOW,
+                              debounce=False)
+        p1_superbat = I2C_Button(constants.BUTTON3_ADDR,
+                                 constants.BUTTON3_BIT,
+                                 constants.BUTTON3_ACTIVE_LOW,
+                                 debounce=False)
+        p1_interface = HardwareInputs(p1_knob,
+                                      p1_serve,
+                                      p1_superbat)
     else:
         p1_interface = AI(ball=ball)
 
     if not constants.P2_AI:
-        p2_knob = inputs.diy_knob.DIY_ADC(constants.I2C_BUS,
-                                         constants.DIY_ADC_PIN,
-                                         constants.DIY_ADC_ADDR,
-                                         constants.DIY_ADC_N_BITS)
-        p2_serve = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON0_ADDR,
-                                               constants.I2C_BUTTON0_BIT,
-                                               constants.BUTTONS_P2_ACTIVE_LOW,
-                                               debounce=True)
-        p2_superbat = inputs.i2c_button.I2C_Button(constants.I2C_BUTTON1_ADDR,
-                                                  constants.I2C_BUTTON1_BIT,
-                                                  constants.BUTTONS_P2_ACTIVE_LOW,
-                                                  debounce=True)
-        p2_interface = inputs.interface.HardwareInputs(p2_knob,
-                                                      p2_serve,
-                                                      p2_superbat)
+        p2_knob = DIY_ADC(constants.I2C_BUS,
+                          constants.DIY_ADC_PIN,
+                          constants.DIY_ADC_ADDR,
+                          constants.DIY_ADC_N_BITS)
+        p2_serve = I2C_Button(constants.BUTTON0_ADDR,
+                              constants.BUTTON0_BIT,
+                              constants.BUTTONS_P2_ACTIVE_LOW,
+                              debounce=True)
+        p2_superbat = I2C_Button(constants.BUTTON1_ADDR,
+                                 constants.BUTTON1_BIT,
+                                 constants.BUTTONS_P2_ACTIVE_LOW,
+                                 debounce=True)
+        p2_interface = HardwareInputs(p2_knob,
+                                      p2_serve,
+                                      p2_superbat)
     else:
         p2_interface = AI(ball=ball)
 
@@ -86,7 +86,7 @@ def main():
 
     diag = Diagnostics(p1, p2, ball)
 
-    serves = 5
+    serves = constants.N_SERVES
     ball.serving = True
     ball.server = p1.bat
 
@@ -99,6 +99,9 @@ def main():
         if constants.FLUSHING:
             cg.out.flush()
 
+
+        # Countdown on the 7-seg display. Blocking, so game starts when
+        # it finishes
         if constants.COUNTDOWN:
             cd = Countdown(constants.I2C_BUS, constants.COUNTDOWN_ADDR,
                            constants.COUNTDOWN_N_BITS, constants.COUNTDOWN_LSB,
@@ -110,13 +113,14 @@ def main():
         # Independant refresh times mean the ball can change speeds without
         # affecting the bats.
         ball_refresh_time = time.perf_counter()
-        bat_refresh_time = time.perf_counter()
+        input_refresh_time = time.perf_counter()
 
         playing = True
         while playing:
             if time.perf_counter() - ball_refresh_time >= ball.speed:
-                if ball.pos[1] == 0 or ball.pos[1] == constants.SCR_WIDTH:
-                    if ball.pos[1] == 0:
+                if (ball.pos[1] == constants.SCR_MIN or
+                        ball.pos[1] == constants.SCR_WIDTH):
+                    if ball.pos[1] == constants.SCR_MIN:
                         p2.score.score += 1
                         p2.score.draw()
                         if constants.PIGLOW:
@@ -134,9 +138,10 @@ def main():
                         ball.server = p2.bat \
                                         if ball.server is p1.bat else \
                                         p1.bat
-                        serves = 5
+                        serves = constants.N_SERVES
 
-                    if p1.score.score == 9 or p2.score.score == 9:
+                    if (p1.score.score == constants.WIN_SCORE or
+                            p2.score.score == constants.WIN_SCORE):
                         playing = False
 
                     # Code goes here for score events; e.g. PiGlow lights,
@@ -147,11 +152,10 @@ def main():
                                   p2.bat.collide(ball)
                     wall_collide = ball.collide()
                     if bat_collide:
-                        ball.vector = bat_collide
                         ball.randomise_speed()
                         # sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
                     if wall_collide:
-                        ball.vector = wall_collide
+                        pass
                         # sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
                 if ball.just_served:
                     ball.just_served = False
@@ -169,7 +173,7 @@ def main():
 
                 ball_refresh_time = time.perf_counter()
 
-            if time.perf_counter() - bat_refresh_time >= constants.BAT_SPEED:
+            if time.perf_counter() - input_refresh_time >= constants.BAT_SPEED:
                 # Move bats to position here
 
                 p1.update()
@@ -181,16 +185,16 @@ def main():
                 p1.bat.draw()
                 p2.bat.draw()
 
-                bat_refresh_time = time.perf_counter()
+                input_refresh_time = time.perf_counter()
 
             if constants.FLUSHING:
                 # flush updates to screen
                 cg.out.flush()
 
             # sound.update()
-    if p1.score.score == 9:
+    if p1.score.score == constants.WIN_SCORE:
         winner = "Player 1"
-    if p2.score.score == 9:
+    if p2.score.score == constants.WIN_SCORE:
         winner = "Player 2"
     print("The winner is {}".format(winner))
 
