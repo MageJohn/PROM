@@ -11,6 +11,6 @@ class Countdown:
         self.speed = speed
 
     def activate(self):
-        for n in range(2**self.n_bits - 1, -1, step=-1):
+        for n in range(2**self.n_bits - 1, -1, -1):
             self.bus.write_byte(self.addr, n << self.lsb)
             time.sleep(self.speed)

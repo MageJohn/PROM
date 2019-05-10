@@ -31,12 +31,18 @@ class AD799:
             self.ma.add_value(value)
             value = self.ma.get_average()
 
+        self.value = value
+
+        if value < constants.AD799_MIN:
+            value = constants.AD799_MIN
+        if value > constants.AD799_MAX:
+            value = constants.AD799_MAX
+
         percentage = (value - constants.AD799_MIN) / \
                      (constants.AD799_MAX - constants.AD799_MIN)
 
         y = int((percentage * (constants.SCR_HEIGHT - constants.SCR_MIN)) + constants.SCR_MIN)
 
-        self.value = value
         self.bat_y = y
 
 

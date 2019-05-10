@@ -17,6 +17,7 @@ if constants.BALL_LEDS:
 
 if constants.PIGLOW:
     from lights import pulse_all
+    from lights import spiral
 
 if not constants.P1_AI or not constants.P2_AI:
     from inputs.ad799_knob import AD799
@@ -39,7 +40,8 @@ def main():
         pulse = pulse_all.PulseLights()
 
     if not constants.P1_AI:
-        p1_knob = AD799(constants.AD799_ADDR)
+        p1_knob = AD799(constants.AD799_ADDR,
+                        constants.AD799_USE_MOVING_AVERAGE)
         p1_serve = I2C_Button(constants.BUTTON2_ADDR,
                               constants.BUTTON2_BIT,
                               constants.BUTTON2_ACTIVE_LOW,
@@ -61,11 +63,11 @@ def main():
                           constants.DIY_ADC_N_BITS)
         p2_serve = I2C_Button(constants.BUTTON0_ADDR,
                               constants.BUTTON0_BIT,
-                              constants.BUTTONS_P2_ACTIVE_LOW,
+                              constants.BUTTON0_ACTIVE_LOW,
                               debounce=True)
         p2_superbat = I2C_Button(constants.BUTTON1_ADDR,
                                  constants.BUTTON1_BIT,
-                                 constants.BUTTONS_P2_ACTIVE_LOW,
+                                 constants.BUTTON1_ACTIVE_LOW,
                                  debounce=True)
         p2_interface = HardwareInputs(p2_knob,
                                       p2_serve,
@@ -76,8 +78,8 @@ def main():
     p1 = Player(cg, ball, constants.LEFT, p1_interface)
     p2 = Player(cg, ball, constants.RIGHT, p2_interface)
 
-    # sound = constants.SOUND(constants.SOUND_PIN)
-    # sound.notes(constants.INTRO_MUS)
+    sound = constants.SOUND(constants.SOUND_PIN)
+    #sound.notes(constants.INTRO_MUS)
 
     if type(p1.interface) is AI:
         p1.interface.give_inputs(bat=p1.bat)
@@ -146,6 +148,8 @@ def main():
 
                     # Code goes here for score events; e.g. PiGlow lights,
                     # sound effects
+                    
+                    sound.notes([Note(constants.WALL_TONE, constants.TONE_LENGTH*2), Note(constants.BAT_TONE, constants.TONE_LENGTH)])
 
                 elif not ball.just_served and not ball.serving:
                     bat_collide = p1.bat.collide(ball) or\
@@ -153,10 +157,10 @@ def main():
                     wall_collide = ball.collide()
                     if bat_collide:
                         ball.randomise_speed()
-                        # sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
+                        sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
                     if wall_collide:
                         pass
-                        # sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
+                        sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
                 if ball.just_served:
                     ball.just_served = False
 
@@ -191,11 +195,15 @@ def main():
                 # flush updates to screen
                 cg.out.flush()
 
-            # sound.update()
+            sound.update()
     if p1.score.score == constants.WIN_SCORE:
         winner = "Player 1"
     if p2.score.score == constants.WIN_SCORE:
         winner = "Player 2"
+
+    spiral_effect = spiral.Spiral()
+    spiral_effect.activate()
+
     print("The winner is {}".format(winner))
 
 

@@ -2,6 +2,10 @@ import time
 
 import RPi.GPIO as gpio
 
+import faulthandler
+
+faulthandler.enable()
+
 
 class SoundPlayer:
     def __init__(self, pin, dc=30, note_gap=2):
@@ -42,3 +46,10 @@ class SoundPlayer:
                 self._cur_note = None
                 self._duration = self.note_gap
             self._note_started = time.perf_counter()
+
+if __name__ == "__main__":
+    from pacman import notes
+    p = SoundPlayer(9)
+    p.notes(notes)
+    while p._buffer:
+        p.update()
