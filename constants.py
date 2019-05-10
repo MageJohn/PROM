@@ -22,6 +22,7 @@ if LOCAL:
     DEBUG = False
     FLUSHING = True
     SOUND = sound.dummy.SoundPlayer
+    MUSIC = False
 
     PIGLOW = False
     BALL_LEDS = False
@@ -37,10 +38,11 @@ else:
     DEBUG = True
     FLUSHING = False
     SOUND = sound.player.SoundPlayer
+    MUSIC = True
 
     PIGLOW = True
     BALL_LEDS = True
-    COUNTDOWN = False
+    COUNTDOWN = True
 
 I2C_BUS = 1
 
@@ -54,7 +56,7 @@ AD799_MIN = 0
 AD799_MOVING_AVERAGE_BUF_SIZE = 5
 AD799_USE_MOVING_AVERAGE = True
 
-DIY_ADC_MAX = 40
+DIY_ADC_MAX = 44
 DIY_ADC_MIN = 0
 DIY_ADC_ADDR = 0x38
 DIY_ADC_N_BITS = 6
@@ -78,9 +80,9 @@ BUTTON3_ACTIVE_LOW = False
 
 # Delay between each decrement of the countdown
 COUNTDOWN_SPEED = 0.5
-COUNTDOWN_ADDR = 0x22
+COUNTDOWN_ADDR = 0x24
 COUNTDOWN_N_BITS = 2
-COUNTDOWN_LSB = 0
+COUNTDOWN_LSB = 1
 
 # Sound settings
 SOUND_PIN = 9

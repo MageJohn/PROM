@@ -9,6 +9,9 @@ from player import Player
 from sound.note import Note
 from diagdisplay import Diagnostics
 
+if constants.MUSIC:
+    from sound import sound_playback
+
 if constants.COUNTDOWN:
     from countdown import Countdown
 
@@ -79,7 +82,6 @@ def main():
     p2 = Player(cg, ball, constants.RIGHT, p2_interface)
 
     sound = constants.SOUND(constants.SOUND_PIN)
-    #sound.notes(constants.INTRO_MUS)
 
     if type(p1.interface) is AI:
         p1.interface.give_inputs(bat=p1.bat)
@@ -101,11 +103,14 @@ def main():
         if constants.FLUSHING:
             cg.out.flush()
 
+        if constants.MUSIC:
+            mikrotik = sound_playback.MikrotikPlayer("sound/supermario.mikrotik")
+            mikrotik.play()
 
         # Countdown on the 7-seg display. Blocking, so game starts when
         # it finishes
         if constants.COUNTDOWN:
-            cd = Countdown(constants.I2C_BUS, constants.COUNTDOWN_ADDR,
+            cd = Countdown(constants.I2C_BUS,
                            constants.COUNTDOWN_N_BITS, constants.COUNTDOWN_LSB,
                            constants.COUNTDOWN_SPEED)
             cd.activate()
