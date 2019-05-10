@@ -39,7 +39,8 @@ def main():
         pulse = pulse_all.PulseLights()
 
     if not constants.P1_AI:
-        p1_knob = AD799(constants.AD799_ADDR)
+        p1_knob = AD799(constants.AD799_ADDR,
+                        constants.AD799_USE_MOVING_AVERAGE)
         p1_serve = I2C_Button(constants.BUTTON2_ADDR,
                               constants.BUTTON2_BIT,
                               constants.BUTTON2_ACTIVE_LOW,
