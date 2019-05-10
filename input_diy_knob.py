@@ -53,8 +53,8 @@ class DIY_ADC():
     def update(self):
         # could also use the ramp function
         self.approx()
-        percentage = (self.value - constants.INPUT_DIY_ADC_MIN) / \
-                     (constants.INPUT_DIY_ADC_MAX - constants.INPUT_DIY_ADC_MIN)
+        percentage = (self.value - constants.DIY_ADC_MIN) / \
+                     (constants.DIY_ADC_MAX - constants.DIY_ADC_MIN)
 
         self.bat_y = int((percentage * (constants.SCR_HEIGHT - constants.SCR_MIN)) + constants.SCR_MIN)
 

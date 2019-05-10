@@ -9,6 +9,7 @@ from player import Player
 from sound_note import Note
 from diagdisplay import Diagnostics
 from ball_leds import BallLEDs
+from countdown import Countdown
 
 if constants.PIGLOW:
     from lights import pulse_all
@@ -90,7 +91,13 @@ def main():
         p2.score.draw()
         p1.bat.draw()
         p2.bat.draw()
-        cg.out.flush()
+        if constants.FLUSHING:
+            cg.out.flush()
+
+        cd = Countdown(constants.I2C_BUS, constants.COUNTDOWN_ADDR,
+                       constants.COUNTDOWN_N_BITS, constants.COUNTDOWN_LSB,
+                       constants.COUNTDOWN_SPEED)
+        cd.activate()
 
         # Code goes here for intro music
 

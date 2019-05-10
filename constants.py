@@ -3,39 +3,14 @@ import sys
 from consolegraphics import ConsoleGraphics as cg
 import sound_pacman
 
+# Flag used to easily switch between sets of constants designed
+# for local testing or actual running
 LOCAL = True
 
 # Screen sizes
 SCR_WIDTH = 80
 SCR_HEIGHT = 24
 SCR_MIN = 1
-
-PIN0 = 10
-PIN1 = 9
-
-I2C_BUS = 1
-
-AD799_ADDR = 0x21
-INPUT_AD799_MAX = 4090
-INPUT_AD799_MIN = 0
-
-INPUT_DIY_ADC_MAX = 40
-INPUT_DIY_ADC_MIN = 0
-DIY_ADC_ADDR = 0x38
-DIY_ADC_N_BITS = 6
-DIY_ADC_PIN = PIN1
-
-BUTTONS_P1_ACTIVE_LOW = True
-BUTTONS_P2_ACTIVE_LOW = False
-
-I2C_BUTTON0_ADDR = 0x38
-I2C_BUTTON0_BIT = 6
-I2C_BUTTON1_ADDR = 0x38
-I2C_BUTTON1_BIT = 7
-I2C_BUTTON2_ADDR = 0x3A
-I2C_BUTTON2_BIT = 6
-I2C_BUTTON3_ADDR = 0x3A
-I2C_BUTTON3_BIT = 7
 
 P1_AI = False
 P2_AI = False
@@ -50,8 +25,8 @@ if LOCAL:
 
     PIGLOW = False
 
-    P1_AI = False
-    P2_AI = False
+    P1_AI = True
+    P2_AI = True
 else:
     from textserial import TextSerial
     import sound_player
@@ -65,7 +40,44 @@ else:
 
     PIGLOW = True
 
-SOUND_PIN = PIN1
+I2C_BUS = 1
+
+#
+# Various constants used to interface with the controllers
+#
+
+AD799_ADDR = 0x21
+AD799_MAX = 4090
+AD799_MIN = 0
+AD799_MOVING_AVERAGE_BUF_SIZE = 10
+AD799_USE_MOVING_AVERAGE = True
+
+DIY_ADC_MAX = 40
+DIY_ADC_MIN = 0
+DIY_ADC_ADDR = 0x38
+DIY_ADC_N_BITS = 6
+DIY_ADC_PIN = 9
+
+BUTTONS_P1_ACTIVE_LOW = True
+BUTTONS_P2_ACTIVE_LOW = False
+
+I2C_BUTTON0_ADDR = 0x38
+I2C_BUTTON0_BIT = 6
+I2C_BUTTON1_ADDR = 0x38
+I2C_BUTTON1_BIT = 7
+I2C_BUTTON2_ADDR = 0x3A
+I2C_BUTTON2_BIT = 6
+I2C_BUTTON3_ADDR = 0x3A
+I2C_BUTTON3_BIT = 7
+
+# Delay between each decrement of the countdown
+COUNTDOWN_SPEED = 0.5
+COUNTDOWN_ADDR = 0x3A
+COUNTDOWN_N_BITS = 2
+COUNTDOWN_LSB = 0
+
+# Sound settings
+SOUND_PIN = 3
 WALL_TONE = 131
 BAT_TONE = 131
 TONE_LENGTH = 30
@@ -74,7 +86,7 @@ INTRO_MUS = sound_pacman.notes
 # Speed at which the AI moves
 AI_SPEED = 3/SCR_HEIGHT
 
-
+# How long to disable a button for when debouncing is enabled
 DEBOUNCE_TIME = 0.2
 
 # Speeds the ball can go at
@@ -89,7 +101,9 @@ BALL_SPEED_WEIGHTS = [2.5, 7.5, 10]
 # Expressed as time per refresh
 BAT_SPEED = 1/60
 
+# Default length of the bat in characters
 BAT_LENGTH = 3
+# Length as superbat
 BAT_SUPERLENGTH = 6
 
 # Number of superbats per game
@@ -110,8 +124,11 @@ LEFT = 'left'
 RIGHT = 'right'
 
 # PiGlow brightness and speed
-PIGLOW_B = 128 #Brightness from 0-255
-PIGLOW_S = 500 #Speed in milliseconds
+PIGLOW_B = 128  # Brightness from 0-255
+PIGLOW_S = 500  # Speed in milliseconds
 
+# The GPIO pins that the ball indicator LEDs are on
 BALL_LED_PINS = (5, 6, 12, 13, 16, 19, 20, 26)
+# The address of the I2C expander chip for the addition ball LEDs
 BALL_LED_I2C_ADDR = 0x39
+
