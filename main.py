@@ -41,6 +41,7 @@ def main():
 
     if constants.PIGLOW:
         pulse = pulse_all.PulseLights()
+        spiral_effect = spiral.piral()
 
     if not constants.P1_AI:
         p1_knob = AD799(constants.AD799_ADDR,
@@ -131,12 +132,12 @@ def main():
                         p2.score.score += 1
                         p2.score.draw()
                         if constants.PIGLOW:
-                            pulse.activate()
+                            spiral_effect.activate()
                     else:
                         p1.score.score += 1
                         p1.score.draw()
                         if constants.PIGLOW:
-                            pulse.activate()
+                            spiral_effect.activate()
 
                     ball.serving = True
                     ball.speed = constants.BAT_SPEED
@@ -206,7 +207,6 @@ def main():
     if p2.score.score == constants.WIN_SCORE:
         winner = "Player 2"
 
-    spiral_effect = spiral.Spiral()
     spiral_effect.activate()
 
     print("The winner is {}".format(winner))
