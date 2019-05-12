@@ -5,7 +5,7 @@ import sound.pacman
 
 # Flag used to easily switch between sets of constants designed
 # for local testing or actual running
-LOCAL = True
+LOCAL = False
 
 # Screen sizes
 SCR_WIDTH = 80
@@ -22,6 +22,7 @@ if LOCAL:
     DEBUG = False
     FLUSHING = True
     SOUND = sound.dummy.SoundPlayer
+    MUSIC = False
 
     PIGLOW = False
     BALL_LEDS = False
@@ -37,9 +38,10 @@ else:
     DEBUG = True
     FLUSHING = False
     SOUND = sound.player.SoundPlayer
+    MUSIC = True
 
     PIGLOW = True
-    BALL_LEDS = False
+    BALL_LEDS = True
     COUNTDOWN = True
 
 I2C_BUS = 1
@@ -49,16 +51,16 @@ I2C_BUS = 1
 #
 
 AD799_ADDR = 0x21
-AD799_MAX = 4090
+AD799_MAX = 3300
 AD799_MIN = 0
-AD799_MOVING_AVERAGE_BUF_SIZE = 10
+AD799_MOVING_AVERAGE_BUF_SIZE = 5
 AD799_USE_MOVING_AVERAGE = True
 
-DIY_ADC_MAX = 40
+DIY_ADC_MAX = 44
 DIY_ADC_MIN = 0
 DIY_ADC_ADDR = 0x38
 DIY_ADC_N_BITS = 6
-DIY_ADC_PIN = 9
+DIY_ADC_PIN = 10
 
 BUTTONS_P1_ACTIVE_LOW = True
 BUTTONS_P2_ACTIVE_LOW = False
@@ -69,24 +71,24 @@ BUTTON0_ACTIVE_LOW = True
 BUTTON1_ADDR = 0x38
 BUTTON1_BIT = 7
 BUTTON1_ACTIVE_LOW = True
-BUTTON2_ADDR = 0x3A
+BUTTON2_ADDR = 0x22
 BUTTON2_BIT = 6
 BUTTON2_ACTIVE_LOW = False
-BUTTON3_ADDR = 0x3A
+BUTTON3_ADDR = 0x22
 BUTTON3_BIT = 7
 BUTTON3_ACTIVE_LOW = False
 
 # Delay between each decrement of the countdown
 COUNTDOWN_SPEED = 0.5
-COUNTDOWN_ADDR = 0x3A
+COUNTDOWN_ADDR = 0x24
 COUNTDOWN_N_BITS = 2
-COUNTDOWN_LSB = 0
+COUNTDOWN_LSB = 1
 
 # Sound settings
-SOUND_PIN = 3
+SOUND_PIN = 9
 WALL_TONE = 131
-BAT_TONE = 131
-TONE_LENGTH = 30
+BAT_TONE = 340
+TONE_LENGTH = 100
 INTRO_MUS = sound.pacman.notes
 
 # Speed at which the AI moves

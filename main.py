@@ -9,6 +9,9 @@ from player import Player
 from sound.note import Note
 from diagdisplay import Diagnostics
 
+if constants.MUSIC:
+    from sound import sound_playback
+
 if constants.COUNTDOWN:
     from countdown import Countdown
 
@@ -17,6 +20,7 @@ if constants.BALL_LEDS:
 
 if constants.PIGLOW:
     from lights import pulse_all
+    from lights import spiral
 
 if not constants.P1_AI or not constants.P2_AI:
     from inputs.ad799_knob import AD799
@@ -62,11 +66,11 @@ def main():
                           constants.DIY_ADC_N_BITS)
         p2_serve = I2C_Button(constants.BUTTON0_ADDR,
                               constants.BUTTON0_BIT,
-                              constants.BUTTONS_P2_ACTIVE_LOW,
+                              constants.BUTTON0_ACTIVE_LOW,
                               debounce=True)
         p2_superbat = I2C_Button(constants.BUTTON1_ADDR,
                                  constants.BUTTON1_BIT,
-                                 constants.BUTTONS_P2_ACTIVE_LOW,
+                                 constants.BUTTON1_ACTIVE_LOW,
                                  debounce=True)
         p2_interface = HardwareInputs(p2_knob,
                                       p2_serve,
@@ -77,8 +81,7 @@ def main():
     p1 = Player(cg, ball, constants.LEFT, p1_interface)
     p2 = Player(cg, ball, constants.RIGHT, p2_interface)
 
-    # sound = constants.SOUND(constants.SOUND_PIN)
-    # sound.notes(constants.INTRO_MUS)
+    sound = constants.SOUND(constants.SOUND_PIN)
 
     if type(p1.interface) is AI:
         p1.interface.give_inputs(bat=p1.bat)
@@ -100,11 +103,14 @@ def main():
         if constants.FLUSHING:
             cg.out.flush()
 
+        if constants.MUSIC:
+            mikrotik = sound_playback.MikrotikPlayer("sound/supermario.mikrotik")
+            mikrotik.play()
 
         # Countdown on the 7-seg display. Blocking, so game starts when
         # it finishes
         if constants.COUNTDOWN:
-            cd = Countdown(constants.I2C_BUS, constants.COUNTDOWN_ADDR,
+            cd = Countdown(constants.I2C_BUS,
                            constants.COUNTDOWN_N_BITS, constants.COUNTDOWN_LSB,
                            constants.COUNTDOWN_SPEED)
             cd.activate()
@@ -147,6 +153,8 @@ def main():
 
                     # Code goes here for score events; e.g. PiGlow lights,
                     # sound effects
+                    
+                    sound.notes([Note(constants.WALL_TONE, constants.TONE_LENGTH*2), Note(constants.BAT_TONE, constants.TONE_LENGTH)])
 
                 elif not ball.just_served and not ball.serving:
                     bat_collide = p1.bat.collide(ball) or\
@@ -154,10 +162,10 @@ def main():
                     wall_collide = ball.collide()
                     if bat_collide:
                         ball.randomise_speed()
-                        # sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
+                        sound.note(Note(constants.BAT_TONE, constants.TONE_LENGTH))
                     if wall_collide:
                         pass
-                        # sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
+                        sound.note(Note(constants.WALL_TONE, constants.TONE_LENGTH))
                 if ball.just_served:
                     ball.just_served = False
 
@@ -192,11 +200,15 @@ def main():
                 # flush updates to screen
                 cg.out.flush()
 
-            # sound.update()
+            sound.update()
     if p1.score.score == constants.WIN_SCORE:
         winner = "Player 1"
     if p2.score.score == constants.WIN_SCORE:
         winner = "Player 2"
+
+    spiral_effect = spiral.Spiral()
+    spiral_effect.activate()
+
     print("The winner is {}".format(winner))
 
 

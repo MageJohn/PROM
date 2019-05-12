@@ -1,4 +1,4 @@
-from collectionts import deque
+from collections import deque
 
 
 class MovingAverage:

@@ -10,9 +10,9 @@ class Bat:
         self.col = (self.side * 3) % constants.SCR_WIDTH
         self.color = color
         self.y = 9
-        self.old_y = self.y
+        self.old_y = 0
         self.length = constants.BAT_LENGTH
-        self.old_length = self.length
+        self.old_length = 0
         self._superbats = constants.SUPERBATS
         self._superbat = False
 
@@ -37,7 +37,7 @@ class Bat:
         self.length = constants.BAT_LENGTH
 
     def draw(self):
-        if self.old_y == self.y:
+        if self.old_y == self.y and self.old_length == self.length:
             return
         # Set the bacground color
         self.cg.write("\x1B[{}m".format(self.cg.bgcolor))
