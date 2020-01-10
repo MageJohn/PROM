@@ -38,7 +38,7 @@ else:
     DEBUG = True
     FLUSHING = False
     SOUND = sound.player.SoundPlayer
-    MUSIC = True
+    MUSIC = False
 
     PIGLOW = True
     BALL_LEDS = True
@@ -54,9 +54,10 @@ AD799_ADDR = 0x21
 AD799_MAX = 3300
 AD799_MIN = 0
 AD799_MOVING_AVERAGE_BUF_SIZE = 5
+
 AD799_USE_MOVING_AVERAGE = True
 
-DIY_ADC_MAX = 44
+DIY_ADC_MAX = 38
 DIY_ADC_MIN = 0
 DIY_ADC_ADDR = 0x38
 DIY_ADC_N_BITS = 6
@@ -71,6 +72,7 @@ BUTTON0_ACTIVE_LOW = True
 BUTTON1_ADDR = 0x38
 BUTTON1_BIT = 7
 BUTTON1_ACTIVE_LOW = True
+
 BUTTON2_ADDR = 0x22
 BUTTON2_BIT = 6
 BUTTON2_ACTIVE_LOW = False
@@ -101,12 +103,15 @@ DEBOUNCE_TIME = 0.2
 # Expressed as time per refresh
 # n/SCR_WIDTH means the ball will cross the screen in n seconds.
 BALL_SPEEDS = [2/SCR_WIDTH, 3/SCR_WIDTH, 4/SCR_WIDTH]
+#BALL_SPEEDS = [3/SCR_WIDTH]
 # Probability weighting for the different speeds
 # The wieghts are cumulative
 BALL_SPEED_WEIGHTS = [2.5, 7.5, 10]
+#BALL_SPEED_WEIGHTS = [10]
 
 # Speed at which to refresh the bat position
 # Expressed as time per refresh
+
 BAT_SPEED = 1/60
 
 # Default length of the bat in characters
@@ -118,6 +123,7 @@ BAT_SUPERLENGTH = 6
 SUPERBATS = 2
 # How long the superbats last in seconds
 SUPERBAT_TIME = 15
+
 
 # Number of serves before switching sides
 N_SERVES = 5

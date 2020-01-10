@@ -41,7 +41,7 @@ def main():
 
     if constants.PIGLOW:
         pulse = pulse_all.PulseLights()
-        spiral_effect = spiral.piral()
+        spiral_effect = spiral.Spiral()
 
     if not constants.P1_AI:
         p1_knob = AD799(constants.AD799_ADDR,
